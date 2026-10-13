@@ -1,5 +1,8 @@
 {
   "$comment": "Dogfooding config for this repository.",
-  "$comment_ignorePaths": "fixtures/ holds deliberately vulnerable sample projects used by the tests.",
-  "ignorePaths": ["fixtures/**"]
+  "$comment_ignorePaths": "fixtures/ holds deliberately vulnerable sample projects; apps/web/test-results/ holds local Playwright copies of them.",
+  "ignorePaths": [
+    "fixtures/**",
+    "apps/web/test-results/**"
+  ]
 }
