@@ -1,0 +1,5 @@
+{
+  "$comment": "Dogfooding config for this repository.",
+  "$comment_ignorePaths": "fixtures/ holds deliberately vulnerable sample projects used by the tests.",
+  "ignorePaths": ["fixtures/**"]
+}

@@ -13,6 +13,11 @@ import { DB_003 } from "./data/DB-003.js";
 import { DB_004 } from "./data/DB-004.js";
 import { DB_005 } from "./data/DB-005.js";
 import { DB_006 } from "./data/DB-006.js";
+import { DEP_001 } from "./deps/DEP-001.js";
+import { DEP_002 } from "./deps/DEP-002.js";
+import { DEP_003 } from "./deps/DEP-003.js";
+import { DEP_004 } from "./deps/DEP-004.js";
+import { DEP_005 } from "./deps/DEP-005.js";
 import { CODE_001 } from "./code/CODE-001.js";
 import { CODE_002 } from "./code/CODE-002.js";
 import { CODE_003 } from "./code/CODE-003.js";
@@ -41,6 +46,11 @@ export const DEFAULT_RULES: readonly Rule[] = [
   DB_004,
   DB_005,
   DB_006,
+  DEP_001,
+  DEP_002,
+  DEP_003,
+  DEP_004,
+  DEP_005,
   CODE_001,
   CODE_002,
   CODE_003,

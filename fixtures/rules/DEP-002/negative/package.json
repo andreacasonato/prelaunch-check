@@ -1,0 +1,1 @@
+{ "name": "app", "workspaces": ["apps/*"], "devDependencies": { "typescript": "6.0.3" } }

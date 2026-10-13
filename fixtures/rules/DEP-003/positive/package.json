@@ -1,0 +1,8 @@
+{
+  "name": "app",
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-secure-auth-helper": "^1.0.0",
+    "@acme/internal-ui": "^2.0.0"
+  }
+}

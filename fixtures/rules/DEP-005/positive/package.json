@@ -1,0 +1,10 @@
+{
+  "name": "app",
+  "dependencies": {
+    "react": "*",
+    "lodash": "latest"
+  },
+  "devDependencies": {
+    "typescript": ""
+  }
+}

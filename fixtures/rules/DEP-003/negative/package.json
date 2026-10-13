@@ -1,0 +1,12 @@
+{
+  "name": "app",
+  "workspaces": ["packages/*"],
+  "dependencies": {
+    "react": "^19.0.0",
+    "lib": "workspace:*",
+    "local-thing": "file:../local-thing",
+    "forked": "github:me/forked#main",
+    "my-lodash": "npm:lodash@^4.17.21",
+    "@corp/design": "^1.0.0"
+  }
+}

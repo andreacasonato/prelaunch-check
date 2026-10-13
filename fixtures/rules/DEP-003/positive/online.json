@@ -1,0 +1,14 @@
+{
+  "npm": {
+    "react": {
+      "exists": true,
+      "createdAt": "2011-10-26T17:46:21.942Z"
+    },
+    "react-secure-auth-helper": {
+      "exists": false
+    },
+    "@acme/internal-ui": {
+      "exists": false
+    }
+  }
+}

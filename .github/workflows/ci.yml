@@ -30,3 +30,5 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      # Dogfooding: the tool must pass its own scan (TRD §13).
+      - run: node packages/cli/dist/index.js scan . --fail-on high --no-gitleaks --out "$RUNNER_TEMP/plc-report"

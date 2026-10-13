@@ -22,3 +22,8 @@ playwright-report/
 
 # Private planning docs: kept locally, never published
 /docs/
+
+# Copied into the CLI package by prepack
+/packages/cli/README.md
+/packages/cli/LICENSE
+/packages/cli/NOTICE

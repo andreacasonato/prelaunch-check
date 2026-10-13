@@ -1,0 +1,7 @@
+{
+  "name": "app",
+  "dependencies": {
+    "react": "^19.0.0",
+    "shiny-new-lib": "^0.1.0"
+  }
+}

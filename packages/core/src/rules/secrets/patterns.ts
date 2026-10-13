@@ -392,7 +392,9 @@ export const SECRET_PATTERNS: readonly SecretPattern[] = [
     vendor: "PlanetScale",
     label: "PlanetScale password",
     kind: "secret",
-    regex: re(String.raw`\b(pscale_pw_[\w=.-]{32,64})${END}`, "i"),
+    // Start boundary is a lookbehind instead of gitleaks' \b: with \b, runs like "pscale_pw_0-pscale_pw_0-…"
+    // start a new attempt after every "-", which is linear but slow. Same matches for real tokens.
+    regex: re(String.raw`(?<![\w=.-])(pscale_pw_[\w=.-]{32,64})${END}`, "i"),
     keywords: ["pscale_pw_"],
     severity: "critical",
     isTest: false,
@@ -405,7 +407,8 @@ export const SECRET_PATTERNS: readonly SecretPattern[] = [
     vendor: "PlanetScale",
     label: "PlanetScale API token",
     kind: "secret",
-    regex: re(String.raw`\b(pscale_tkn_[\w=.-]{32,64})${END}`),
+    // Lookbehind start boundary instead of \b, as for planetscale-password.
+    regex: re(String.raw`(?<![\w=.-])(pscale_tkn_[\w=.-]{32,64})${END}`),
     keywords: ["pscale_tkn_"],
     severity: "critical",
     isTest: false,

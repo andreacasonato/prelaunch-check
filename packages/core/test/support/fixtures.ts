@@ -148,7 +148,7 @@ export function loadFixtureDir(dir: string): Record<string, string> {
   const files: Record<string, string> = {};
   for (const full of walk(dir)) {
     const rel = relative(dir, full).split(sep).join("/");
-    if (rel === "expected.json" || rel === ".plc-git-tracked") continue;
+    if (rel === "expected.json" || rel === ".plc-git-tracked" || rel === "online.json") continue;
     files[mapFixturePath(rel)] = materialize(readFileSync(full, "utf8"));
   }
   return files;

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "package-lock.json",
+    "line": 9,
+    "severity": "high",
+    "confidence": "high"
+  },
+  {
+    "path": "package-lock.json",
+    "line": 15,
+    "severity": "critical",
+    "confidence": "high"
+  }
+]

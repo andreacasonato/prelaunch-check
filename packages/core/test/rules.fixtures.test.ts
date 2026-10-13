@@ -8,6 +8,32 @@ import { MemoryFileSource } from "../src/sources/memory.js";
 import { runScan } from "../src/engine/runScan.js";
 import { resolveConfig } from "../src/config.js";
 import { FIXTURES, allFakeValues, fixtureGitTracked, loadFixtureDir } from "./support/fixtures.js";
+import type { OnlineServices, OsvVulnSummary } from "../src/types.js";
+
+/** Recorded online answers (online.json in a fixture case): no network in tests. */
+function recordedOnline(dir: string): OnlineServices | undefined {
+  const file = join(dir, "online.json");
+  if (!existsSync(file)) return undefined;
+  const data = JSON.parse(readFileSync(file, "utf8")) as {
+    osv?: Record<string, string[]>;
+    vulns?: Record<string, OsvVulnSummary>;
+    npm?: Record<string, { exists: boolean; createdAt?: string }>;
+  };
+  return {
+    osvQueryBatch: async (pkgs) =>
+      pkgs.map((pkg) => ({ pkg, vulnIds: data.osv?.[`${pkg.name}@${pkg.version}`] ?? [] })),
+    osvGetVuln: async (id) => {
+      const v = data.vulns?.[id];
+      if (!v) throw new Error(`no recorded vuln ${id}`);
+      return v;
+    },
+    npmPackageInfo: async (name) => {
+      const v = data.npm?.[name];
+      if (!v) throw new Error(`no recorded npm answer for ${name}`);
+      return v;
+    },
+  };
+}
 
 const RULES_DIR = join(FIXTURES, "rules");
 const RECORD = process.env.PLC_RECORD === "1";
@@ -24,7 +50,9 @@ async function scanCase(ruleId: string, dir: string) {
   if (!rule) throw new Error(`No registered rule ${ruleId}`);
   const tracked = fixtureGitTracked(dir);
   const files = new MemoryFileSource(loadFixtureDir(dir), tracked ? { gitTracked: tracked } : {});
+  const online = recordedOnline(dir);
   return runScan({
+    ...(online ? { online } : {}),
     files,
     folderName: "fixture",
     config: resolveConfig({}).config,

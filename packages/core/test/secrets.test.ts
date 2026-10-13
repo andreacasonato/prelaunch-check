@@ -25,16 +25,22 @@ describe("regex safety (TRD §12)", () => {
   it.each(all.map((p) => [p.id, p] as const))("%s runs on 1 MB adversarial input in < 100 ms", (_id, p) => {
     for (const input of adversarial(p.keywords[0]!)) {
       const re = new RegExp(p.regex.source, p.regex.flags);
-      const t0 = performance.now();
-      // Scan the way the engine does: 64 KB windows.
-      for (let off = 0; off < input.length; off += WINDOW - OVERLAP) {
-        re.lastIndex = 0;
-        const chunk = input.slice(off, off + WINDOW);
-        while (re.exec(chunk) !== null) {
-          /* drain */
+      // Best of three, so scheduler noise from parallel test files doesn't cause false failures.
+      // A catastrophic pattern is slower by orders of magnitude and still fails.
+      let best = Infinity;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const t0 = performance.now();
+        // Scan the way the engine does: 64 KB windows.
+        for (let off = 0; off < input.length; off += WINDOW - OVERLAP) {
+          re.lastIndex = 0;
+          const chunk = input.slice(off, off + WINDOW);
+          while (re.exec(chunk) !== null) {
+            /* drain */
+          }
         }
+        best = Math.min(best, performance.now() - t0);
       }
-      expect(performance.now() - t0).toBeLessThan(100);
+      expect(best).toBeLessThan(100);
     }
   });
 

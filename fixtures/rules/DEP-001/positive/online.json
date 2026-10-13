@@ -1,0 +1,36 @@
+{
+  "osv": {
+    "lodash@4.17.20": [
+      "GHSA-35jh-r3h4-6jhm"
+    ],
+    "minimist@1.2.0": [
+      "GHSA-xvch-5gv4-984h"
+    ]
+  },
+  "vulns": {
+    "GHSA-35jh-r3h4-6jhm": {
+      "id": "GHSA-35jh-r3h4-6jhm",
+      "summary": "Command Injection in lodash",
+      "aliases": [
+        "CVE-2021-23337"
+      ],
+      "severity": "high",
+      "fixedIn": [
+        "4.17.21"
+      ],
+      "url": "https://osv.dev/vulnerability/GHSA-35jh-r3h4-6jhm"
+    },
+    "GHSA-xvch-5gv4-984h": {
+      "id": "GHSA-xvch-5gv4-984h",
+      "summary": "Prototype Pollution in minimist",
+      "aliases": [
+        "CVE-2021-44906"
+      ],
+      "severity": "critical",
+      "fixedIn": [
+        "1.2.6"
+      ],
+      "url": "https://osv.dev/vulnerability/GHSA-xvch-5gv4-984h"
+    }
+  }
+}

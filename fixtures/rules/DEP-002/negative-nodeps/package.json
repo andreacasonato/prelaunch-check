@@ -1,0 +1,1 @@
+{ "name": "scripts-only", "scripts": { "build": "tsc" } }

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "package.json",
+    "line": 5,
+    "severity": "high",
+    "confidence": "high"
+  },
+  {
+    "path": "package.json",
+    "line": 6,
+    "severity": "high",
+    "confidence": "medium"
+  }
+]
