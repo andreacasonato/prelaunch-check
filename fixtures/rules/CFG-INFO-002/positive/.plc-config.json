@@ -1,0 +1,10 @@
+{
+  "suppressions": [
+    {
+      "ruleId": "DB-003",
+      "path": "supabase/**",
+      "reason": "credits written by trigger",
+      "expires": "2026-06-30"
+    }
+  ]
+}

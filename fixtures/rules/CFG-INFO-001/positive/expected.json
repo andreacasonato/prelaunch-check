@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/a.ts",
+    "line": 1,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "supabase/migrations/0001.sql",
+    "line": 1,
+    "severity": "info",
+    "confidence": "high"
+  }
+]

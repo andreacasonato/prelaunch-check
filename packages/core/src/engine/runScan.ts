@@ -23,6 +23,8 @@ import { CHECKLIST } from "../checklist/items.js";
 import { compareFindings } from "./sort.js";
 import { renderTemplate } from "./template.js";
 import { scrubEvidence } from "./scrub.js";
+import { parseInlineSuppressions, type InlineSuppression } from "./suppress.js";
+import { matchGlob } from "../files/glob.js";
 import { RULESET_VERSION, SCHEMA_VERSION, TOOL_NAME } from "../version.js";
 import { DEFAULT_RULES } from "../rules/index.js";
 
@@ -50,6 +52,8 @@ export interface ScanInput {
   capabilities?: { git?: boolean; gitleaks?: boolean };
   /** Extra coverage notes from the front end (e.g. online lookups that failed). */
   onlineStatus?: Partial<Coverage["online"]>;
+  /** Fingerprints from a previous report (--baseline): matching findings are marked `existing`. */
+  baseline?: string[];
   /** Wall-clock time the front end spent collecting the site snapshot. */
   siteDurationMs?: number;
   onProgress?: (p: ScanProgress) => void;
@@ -214,6 +218,11 @@ export async function runScan(input: ScanInput): Promise<Report> {
     seen.set(f.fingerprint, n);
     if (n > 1) f.fingerprint = `${f.fingerprint}#${n}`;
   }
+  await applySuppressions(findings, files, config, now);
+  if (input.baseline) {
+    const known = new Set(input.baseline);
+    for (const f of findings) if (known.has(f.fingerprint)) f.existing = true;
+  }
   findings.sort(compareFindings);
 
   // 7. Score + verdict
@@ -319,5 +328,49 @@ function safeHost(target: string): string | undefined {
     return new URL(target).host;
   } catch {
     return undefined;
+  }
+}
+
+/** Config suppressions (not expired) and inline suppressions with a reason → accepted_risk. */
+async function applySuppressions(
+  findings: Finding[],
+  files: BuiltFileIndex | undefined,
+  config: ResolvedConfig,
+  now: Date,
+) {
+  const active = config.suppressions.filter((s) => !s.expires || Date.parse(s.expires) > now.getTime());
+  const decidedAt = isoSeconds(now);
+  const inlineCache = new Map<string, InlineSuppression[]>();
+  for (const f of findings) {
+    if (f.ruleId.startsWith("CFG-INFO-")) continue;
+    const byConfig = active.find(
+      (s) =>
+        s.ruleId === f.ruleId &&
+        (s.fingerprint
+          ? s.fingerprint === f.fingerprint
+          : s.path
+            ? !!f.location.path && matchGlob(s.path, f.location.path)
+            : true),
+    );
+    if (byConfig) {
+      f.status = "accepted_risk";
+      f.decision = { reason: byConfig.reason, decidedAt, source: "config" };
+      continue;
+    }
+    const path = f.location.path;
+    if (!files || !path || f.location.line === undefined) continue;
+    let list = inlineCache.get(path);
+    if (!list) {
+      const text = await files.text(path);
+      list = text === null ? [] : parseInlineSuppressions(text);
+      inlineCache.set(path, list);
+    }
+    const inline = list.find(
+      (s) => s.reason !== null && s.target === f.location.line && s.ruleIds.includes(f.ruleId),
+    );
+    if (inline) {
+      f.status = "accepted_risk";
+      f.decision = { reason: inline.reason!, decidedAt, source: "inline" };
+    }
   }
 }

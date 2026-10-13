@@ -134,7 +134,7 @@ It checks HTTPS and the redirect from http://, security headers (HSTS, Content-S
 
 Run `npx prelaunch-check rules` to see every rule.
 
-**Coming next:** SARIF and HTML reports, and baselines for existing projects (0.3).
+Reports come as JSON (re-open it in the web app), Markdown (paste into an issue or your AI tool), SARIF (GitHub code scanning) and a self-contained HTML page.
 
 ## Privacy: what leaves your computer
 
@@ -152,9 +152,10 @@ npx prelaunch-check scan [folder]        Scan a project folder (default: the cur
   --url <https://…>                      Also check your live site (asks you to confirm you own it)
   --yes-i-am-authorized                  Confirm site ownership in advance (for CI)
   --offline                              No online dependency checks
-  --format json,md                       Which reports to write (json is always written)
+  --format json,md,sarif,html            Which reports to write (json is always written)
   --out <folder>                         Where to write reports (default: ./prelaunch-check-report)
   --fail-on critical|high|medium|low|none   When to exit with an error (default: high)
+  --baseline <report.json>               Only fail on problems that aren't in this older report
   --config <file>                        Use a specific config file
   --use-gitleaks / --no-gitleaks         Also scan git history if gitleaks is installed (default: auto)
   --quiet / --verbose                    Less or more output
@@ -169,7 +170,7 @@ npx prelaunch-check explain <RULE-ID>    Explain one rule and how to fix it
 
 ### Config file
 
-`npx prelaunch-check init` creates `prelaunch-check.config.json` with comments explaining each setting. You can skip folders, turn rules off, change severities, and record accepted risks. Each accepted risk must include a reason, so the decision stays visible to reviewers.
+`npx prelaunch-check init` creates `prelaunch-check.config.json` with comments explaining each setting. You can skip folders, turn rules off, change severities, and record accepted risks. Each accepted risk must include a reason, so the decision stays visible to reviewers. Add an `expires` date to make yourself review it again later.
 
 ```json
 {
@@ -181,13 +182,23 @@ npx prelaunch-check explain <RULE-ID>    Explain one rule and how to fix it
 }
 ```
 
+### Accepting a risk in the code itself
+
+Put a comment on the line above the finding (or at the end of the same line). The reason after the colon is required:
+
+```js
+// prelaunch-check-ignore CODE-002: the input is a constant from our own config
+```
+
+Use `#` instead of `//` in YAML, shell and `.env` files, and `--` in SQL. Accepted findings stay visible in reports under "Suppressed", so reviewers can see every decision.
+
 ### Git history (optional)
 
 Secrets deleted from your code can still be in old commits. If [gitleaks](https://github.com/gitleaks/gitleaks) is installed, Prelaunch Check runs it automatically and reports what it finds (with secrets hidden). Without gitleaks, the report says history wasn't checked.
 
 ### Use it in GitHub Actions
 
-Block pull requests that introduce critical or high problems:
+Block pull requests that introduce critical or high problems, and show findings in your repository's **Security → Code scanning** tab:
 
 ```yaml
 # .github/workflows/prelaunch-check.yml
@@ -195,6 +206,7 @@ name: Prelaunch Check
 on: [push, pull_request]
 permissions:
   contents: read
+  security-events: write # only needed for the SARIF upload
 jobs:
   scan:
     runs-on: ubuntu-latest
@@ -202,7 +214,16 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 24 }
-      - run: npx prelaunch-check@0.2.0 scan . --fail-on high
+      - run: npx prelaunch-check@0.3.0 scan . --format json,sarif --fail-on high
+      - uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        if: always()
+        with: { sarif_file: prelaunch-check-report/prelaunch-check.sarif }
+```
+
+**Adopting it on an existing project?** Run a scan once and keep the report as a baseline. After that, only *new* problems fail the build:
+
+```sh
+npx prelaunch-check scan . --baseline old-report.json --fail-on high
 ```
 
 Actions are pinned to exact commit IDs, which is what Prelaunch Check's own CFG-003 rule recommends.

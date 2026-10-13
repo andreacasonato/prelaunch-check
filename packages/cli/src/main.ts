@@ -23,9 +23,10 @@ Scan options
   --url <https://…>          Also check the live site: headers, cookies, exposed files (≤ 40 GET requests)
   --yes-i-am-authorized      Skip the "do you own this site?" question (for CI)
   --offline                  Don't look up dependencies online (OSV, npm registry)
-  --format json,md           Report formats to write (json is always written)
+  --format json,md,sarif,html   Report formats to write (json is always written)
   --out <dir>                Where to write reports (default ./prelaunch-check-report)
   --fail-on <level>          critical | high | medium | low | none (default high)
+  --baseline <report.json>   Findings already in this report are "existing" and don't fail the run
   --config <file>            Config file (default ./prelaunch-check.config.json)
   --use-gitleaks / --no-gitleaks   Scan git history with gitleaks (default: if installed)
   --quiet / --verbose        Less or more output

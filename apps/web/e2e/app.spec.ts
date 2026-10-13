@@ -162,3 +162,42 @@ test("finding detail is a full page on mobile @mobile", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Where" })).toBeVisible();
   expect(await axe(page)).toEqual([]);
 });
+
+test("exports JSON, Markdown, SARIF and a script-free HTML report", async ({ page }) => {
+  await scanFixture(page, "vuln-next-supabase");
+  const grab = async (name: string) => {
+    const [dl] = await Promise.all([
+      page.waitForEvent("download"),
+      page.getByRole("button", { name, exact: true }).click(),
+    ]);
+    const path = await dl.path();
+    return (await import("node:fs")).readFileSync(path!, "utf8");
+  };
+  expect(JSON.parse(await grab("JSON")).summary.verdict).toBe("blocked");
+  expect(await grab("Markdown")).toContain("# Prelaunch Check report: vuln-next-supabase");
+  expect(JSON.parse(await grab("SARIF")).version).toBe("2.1.0");
+  const html = await grab("HTML");
+  expect(html).toContain("Content-Security-Policy");
+  expect(html).not.toMatch(/<script/i);
+});
+
+test("decisions in an opened report can be saved into this browser", async ({ page }) => {
+  await scanFixture(page, "vuln-next-supabase");
+  await page.locator(".finding-row", { hasText: "Stripe live secret key" }).first().click();
+  await page.getByRole("button", { name: "Mark as accepted risk" }).click();
+  await page.getByLabel(/Reason/).fill("Demo key");
+  await page.getByRole("button", { name: "Save" }).click();
+  await page.keyboard.press("Escape");
+  const [dl] = await Promise.all([
+    page.waitForEvent("download"),
+    page.getByRole("button", { name: "JSON", exact: true }).click(),
+  ]);
+  const reportPath = await dl.path();
+  // A fresh browser profile: open the exported file and import its decision.
+  await page.evaluate(() => localStorage.clear());
+  await page.goto("/#/open");
+  await page.locator("#report-file").setInputFiles(reportPath!);
+  await expect(page.getByText("This report includes 1 recorded decision.")).toBeVisible();
+  await page.getByRole("button", { name: "Save them in this browser" }).click();
+  await expect(page.getByText(/Saved 1 decisions in this browser/)).toBeVisible();
+});

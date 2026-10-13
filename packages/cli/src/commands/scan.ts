@@ -6,6 +6,8 @@ import {
   runScan,
   SEVERITY_ORDER,
   toMarkdown,
+  toSarif,
+  toHtml,
   type Report,
   type Rule,
   type ScanStage,
@@ -65,8 +67,7 @@ const FRAMEWORK_LABEL: Record<string, string> = {
   stripe: "Stripe",
 };
 
-const SUPPORTED_FORMATS = new Set(["json", "md"]);
-const LATER_FORMATS = new Set(["sarif", "html"]);
+const SUPPORTED_FORMATS = new Set(["json", "md", "sarif", "html"]);
 
 async function loadConfigFile(io: Io, flags: ScanFlags, root: string): Promise<unknown> {
   const candidates = flags.config
@@ -122,6 +123,24 @@ function notChecked(r: Report): string[] {
   return out;
 }
 
+/** Fingerprints from a previous prelaunch-check-report.json (APP-FLOW C-06). */
+async function loadBaseline(path: string): Promise<string[]> {
+  let data: unknown;
+  try {
+    data = JSON.parse(await readFile(path, "utf8"));
+  } catch {
+    throw new UsageError(
+      `Couldn't read the baseline report ${basename(path)}: it must be a prelaunch-check-report.json file.`,
+    );
+  }
+  const findings = (data as { tool?: { name?: unknown }; findings?: unknown }).findings;
+  if ((data as { tool?: { name?: unknown } }).tool?.name !== "prelaunch-check" || !Array.isArray(findings))
+    throw new UsageError(`${basename(path)} isn't a Prelaunch Check report.`);
+  return findings
+    .map((f) => (f as { fingerprint?: unknown }).fingerprint)
+    .filter((x): x is string => typeof x === "string");
+}
+
 export function exceedsThreshold(r: Report, failOn: Severity | "none"): boolean {
   if (failOn === "none") return false;
   const limit = SEVERITY_ORDER.indexOf(failOn);
@@ -171,16 +190,16 @@ export async function runScanCommand(
       throw new UsageError((e as Error).message);
     }
   }
-  if (flags.baseline) throw new UsageError("--baseline arrives in version 0.3.0.");
+  let baseline: string[] | undefined;
+  if (flags.baseline) baseline = await loadBaseline(resolve(io.cwd, flags.baseline));
 
   const formats = flags.format
     .split(",")
     .map((f) => f.trim().toLowerCase())
     .filter(Boolean);
   for (const f of formats) {
-    if (LATER_FORMATS.has(f))
-      throw new UsageError(`The ${f} format arrives in version 0.3.0. Available now: json, md.`);
-    if (!SUPPORTED_FORMATS.has(f)) throw new UsageError(`Unknown format "${f}". Use json and/or md.`);
+    if (!SUPPORTED_FORMATS.has(f))
+      throw new UsageError(`Unknown format "${f}". Use any of: json, md, sarif, html.`);
   }
   if (!formats.includes("json")) formats.unshift("json");
 
@@ -247,6 +266,7 @@ export async function runScanCommand(
   const report = await runScan({
     ...(root ? { files: new NodeFileSource(root), folderName: basename(root) } : {}),
     ...(site ? { site, siteDurationMs } : {}),
+    ...(baseline ? { baseline } : {}),
     config,
     toolVersion: VERSION,
     now: io.now(),
@@ -269,6 +289,9 @@ export async function runScanCommand(
   };
   await write("prelaunch-check-report.json", JSON.stringify(report, null, 2) + "\n");
   if (formats.includes("md")) await write("prelaunch-check-report.md", toMarkdown(report));
+  if (formats.includes("sarif"))
+    await write("prelaunch-check.sarif", JSON.stringify(toSarif(report), null, 2) + "\n");
+  if (formats.includes("html")) await write("prelaunch-check-report.html", await toHtml(report));
 
   const p = painter(flags.color);
   if (!flags.quiet) {

@@ -43,6 +43,8 @@ import { WEB_015 } from "./web/WEB-015.js";
 import { WEB_016 } from "./web/WEB-016.js";
 import { WEB_017 } from "./web/WEB-017.js";
 import { WEB_018 } from "./web/WEB-018.js";
+import { CFG_INFO_001 } from "./config/CFG-INFO-001.js";
+import { CFG_INFO_002 } from "./config/CFG-INFO-002.js";
 import { CFG_001 } from "./config/CFG-001.js";
 import { CFG_002 } from "./config/CFG-002.js";
 import { CFG_003 } from "./config/CFG-003.js";
@@ -82,6 +84,8 @@ export const DEFAULT_RULES: readonly Rule[] = [
   CFG_004,
   CFG_005,
   CFG_006,
+  CFG_INFO_001,
+  CFG_INFO_002,
   WEB_001,
   WEB_002,
   WEB_003,

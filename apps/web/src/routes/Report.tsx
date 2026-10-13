@@ -3,7 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import {
   CATEGORY_ORDER,
   compareFindings,
+  toHtml,
   toMarkdown,
+  toSarif,
   type Category,
   type Finding,
   type Report as ReportT,
@@ -16,7 +18,7 @@ import { SEVERITY_WORD, SeverityIcon, sevKey } from "../components/Icons";
 import { useApp } from "../lib/state";
 import { navigate } from "../lib/router";
 import { download } from "../lib/download";
-import { getChecklist } from "../lib/storage";
+import { getChecklist, setDecision } from "../lib/storage";
 import { ruleMeta } from "../lib/rules";
 
 const CATEGORY_LABEL: Record<Category, string> = {
@@ -93,9 +95,69 @@ function Export({ report }: { report: ReportT }) {
         >
           Markdown
         </button>
-        <span className="small muted">SARIF and HTML exports are coming in a later version.</span>
+        <button
+          type="button"
+          className="btn btn-quiet"
+          onClick={() =>
+            download(
+              `prelaunch-check-${name}.sarif`,
+              JSON.stringify(toSarif(report), null, 2) + "\n",
+              "application/sarif+json",
+            )
+          }
+        >
+          SARIF
+        </button>
+        <button
+          type="button"
+          className="btn btn-quiet"
+          onClick={() =>
+            void toHtml(report).then((html) =>
+              download(`prelaunch-check-report-${name}.html`, html, "text/html"),
+            )
+          }
+        >
+          HTML
+        </button>
       </div>
     </section>
+  );
+}
+
+/** W-07: decisions recorded in an opened report can be saved into this browser for this project. */
+function ImportDecisions() {
+  const { loaded, project } = useApp();
+  const [saved, setSaved] = useState(false);
+  if (!loaded || !project) return null;
+  const decided = loaded.original.findings.filter((f) => f.status !== "open" && f.decision);
+  if (!decided.length) return null;
+  if (saved)
+    return (
+      <p className="small">
+        Saved {decided.length} decisions in this browser for {project}.
+      </p>
+    );
+  return (
+    <p className="small">
+      This report includes {decided.length} recorded decision{decided.length === 1 ? "" : "s"}.{" "}
+      <button
+        type="button"
+        className="link-button"
+        onClick={() => {
+          for (const f of decided) {
+            setDecision(project, f.fingerprint, {
+              status: f.status as "accepted_risk" | "false_positive",
+              reason: f.decision!.reason,
+              decidedAt: f.decision!.decidedAt,
+            });
+          }
+          setSaved(true);
+        }}
+      >
+        Save them in this browser
+      </button>{" "}
+      so they apply to your next scan of {project}.
+    </p>
   );
 }
 
@@ -187,6 +249,7 @@ export function Report({ fingerprint }: { fingerprint?: string | undefined }) {
           {loaded.newerVersion && (
             <strong> This report was made by a newer version. Some details may not display.</strong>
           )}
+          <ImportDecisions />
         </div>
       )}
       <VerdictBanner report={report} />

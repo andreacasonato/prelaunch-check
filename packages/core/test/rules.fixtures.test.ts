@@ -64,7 +64,11 @@ async function scanCase(ruleId: string, dir: string) {
     ...(site ? { site } : {}),
     ...(Object.keys(fileMap).length || !site ? { files } : {}),
     folderName: "fixture",
-    config: resolveConfig({}).config,
+    config: resolveConfig(
+      existsSync(join(dir, ".plc-config.json"))
+        ? JSON.parse(readFileSync(join(dir, ".plc-config.json"), "utf8"))
+        : {},
+    ).config,
     toolVersion: "0.0.0-test",
     now: new Date("2026-10-13T00:00:00Z"),
     rules: [rule],

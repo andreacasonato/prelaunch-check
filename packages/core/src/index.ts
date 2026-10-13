@@ -18,3 +18,5 @@ export { PROBES, FALLBACK_PROBES, CORS_TEST_ORIGIN, SITE_LIMITS, type Probe } fr
 export { SEC_006_META } from "./rules/secrets/SEC-006.js";
 export { detectProfile, parsePackageJson, depNames } from "./detect/profile.js";
 export { truncateMiddle } from "./util/format.js";
+export { toSarif, SECURITY_SEVERITY, type SarifLog } from "./formats/sarif.js";
+export { toHtml } from "./formats/html.js";
