@@ -12,6 +12,18 @@ Prelaunch Check reads your project folder and tells you, in plain English, what 
 
 ---
 
+## The easiest way: in your browser
+
+Open **https://andreacasonato.github.io/prelaunch-check/**, click **Scan a project folder**, and pick your project's folder. That's it.
+
+- The scan runs inside the page. **Your files are not uploaded**: your browser may say "upload", but nothing leaves your computer.
+- It works in current Chrome, Edge, Firefox and Safari, with nothing to install.
+- You can also open reports made by the command-line tool there, and work through the pre-launch checklist.
+
+The browser version can't check a live website or your git history. For those, use the command-line tool below.
+
+---
+
 ## Quick start (about 5 minutes, no experience needed)
 
 ### 1. Install Node.js (one time only)
@@ -122,7 +134,7 @@ It checks HTTPS and the redirect from http://, security headers (HSTS, Content-S
 
 Run `npx prelaunch-check rules` to see every rule.
 
-**Coming next:** SARIF and HTML reports and baselines (0.3), and a website where you can pick a folder and scan it in your browser.
+**Coming next:** SARIF and HTML reports, and baselines for existing projects (0.3).
 
 ## Privacy: what leaves your computer
 

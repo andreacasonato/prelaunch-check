@@ -21,6 +21,7 @@ If a contributor finds that these break on real-world files, adding `yaml` (ISC)
 |---|---|---|---|---|
 | react | 19.3.0 | MIT | UI framework chosen in TRD §2 | 2026-10-12 |
 | react-dom | 19.3.0 | MIT | React DOM renderer | 2026-10-12 |
+| lucide-react | 1.49.0 | ISC (some icons MIT, from Feather) | Stroke icon set named in the Design Brief §4.3; only the icons used are bundled. Pinned to a release at least two weeks old (1.56.0 was published on the day it was added). Attribution in NOTICE | 2026-09-29 |
 
 The web app is static and bundled. These ship as part of the built JS, served from the same origin.
 
@@ -42,6 +43,8 @@ None of these are shipped to users.
 | vite | 8.3.4 | MIT | Web app build tool (TRD §2) | 2026-10-08 |
 | @vitejs/plugin-react | 6.1.2 | MIT | React support for Vite | 2026-10-05 |
 | @types/react, @types/react-dom | 19.3.0 | MIT | React type definitions | 2026-10-04 |
+| @playwright/test | 1.63.0 | Apache-2.0 | Web app end-to-end tests (TRD §2); pinned two weeks behind latest | 2026-09-04 |
+| @axe-core/playwright | 4.13.0 | MPL-2.0 | Automated accessibility checks in e2e tests (Design Brief §5). Dev-only, never shipped | 2026-08-11 |
 
 ## GitHub Actions
 
@@ -51,3 +54,6 @@ Each Action is pinned to a full commit SHA with a version comment (TRD §12, CFG
 |---|---|---|
 | actions/checkout | v7.0.1 | `3d3c42e5aac5ba805825da76410c181273ba90b1` |
 | actions/setup-node | v7.1.0 | `949feb2413d6458794dcd2491c4babbbce0c15c1` |
+| actions/configure-pages | v6.0.0 | `45bfe0192ca1faeb007ade9deae92b16b8254a0d` |
+| actions/upload-pages-artifact | v5.0.0 | `fc324d3547104276b827a68afc52ff2a11cc49c9` |
+| actions/deploy-pages | v5.0.1 | `368f82528645a54fb793d4d04e342629a3f51346` |

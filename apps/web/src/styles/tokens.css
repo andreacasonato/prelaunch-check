@@ -1,0 +1,79 @@
+/* Design tokens: docs/04-DESIGN-BRIEF.md §4.1–§4.4. Colours, type and spacing come from the brief only.
+   Contrast is verified by apps/web/test/contrast.test.ts (every text pair ≥ 4.5:1). */
+:root {
+  color-scheme: light;
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --text: #1c1c1a;
+  --text-muted: #5c5c57;
+  --accent: #1f5f4a;
+  --on-accent: var(--surface);
+  --sev-critical: #a3171e;
+  --sev-high: #b04a00;
+  --sev-medium: #7a5a00;
+  --sev-low: #3d5a80;
+  --sev-info: var(--text-muted);
+
+  /* Severity tints: the severity colour at 10% over --surface (brief: "about 10–12%"). */
+  --tint: 10%;
+  --tint-critical: color-mix(in srgb, var(--sev-critical) var(--tint), var(--surface));
+  --tint-high: color-mix(in srgb, var(--sev-high) var(--tint), var(--surface));
+  --tint-medium: color-mix(in srgb, var(--sev-medium) var(--tint), var(--surface));
+  --tint-low: color-mix(in srgb, var(--sev-low) var(--tint), var(--surface));
+  --tint-info: color-mix(in srgb, var(--sev-info) var(--tint), var(--surface));
+  --border: color-mix(in srgb, var(--text) 14%, var(--surface));
+
+  /* Typography (§4.2) */
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --fs-small: 14px;
+  --fs-body: 16px;
+  --fs-h3: 20px;
+  --fs-h2: 28px;
+  --fs-h1: 40px;
+  --lh-body: 1.5;
+  --lh-heading: 1.2;
+
+  /* Spacing: 4 px grid (§4.4) */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+
+  --content-max: 1040px;
+  --radius: 4px;
+  --bar-height: 64px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141413;
+    --surface: #1e1e1c;
+    --text: #edede8;
+    --text-muted: #a3a39c;
+    --accent: #6fc2a2;
+    --on-accent: var(--bg);
+    --sev-critical: #ff8a8a;
+    --sev-high: #ffb066;
+    --sev-medium: #e3c35a;
+    --sev-low: #9db8de;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141413;
+  --surface: #1e1e1c;
+  --text: #edede8;
+  --text-muted: #a3a39c;
+  --accent: #6fc2a2;
+  --on-accent: var(--bg);
+  --sev-critical: #ff8a8a;
+  --sev-high: #ffb066;
+  --sev-medium: #e3c35a;
+  --sev-low: #9db8de;
+}

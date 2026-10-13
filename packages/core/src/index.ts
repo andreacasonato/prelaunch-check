@@ -15,3 +15,6 @@ export { CHECKLIST } from "./checklist/items.js";
 export { DEFAULT_RULES } from "./rules/index.js";
 export { toMarkdown, locationText } from "./formats/markdown.js";
 export { PROBES, FALLBACK_PROBES, CORS_TEST_ORIGIN, SITE_LIMITS, type Probe } from "./rules/web/probes.js";
+export { SEC_006_META } from "./rules/secrets/SEC-006.js";
+export { detectProfile, parsePackageJson, depNames } from "./detect/profile.js";
+export { truncateMiddle } from "./util/format.js";

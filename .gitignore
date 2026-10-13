@@ -27,3 +27,7 @@ playwright-report/
 /packages/cli/README.md
 /packages/cli/LICENSE
 /packages/cli/NOTICE
+
+# Playwright output
+/apps/web/test-results/
+/apps/web/playwright-report/
