@@ -60,7 +60,7 @@ export default tseslint.config(
   },
   // Hard rule (CLAUDE.md): core never imports node:* or touches window/document.
   {
-    files: ["packages/core/**/*.ts"],
+    files: ["packages/core/src/**/*.ts"],
     languageOptions: { globals: {} },
     rules: {
       "no-restricted-imports": [

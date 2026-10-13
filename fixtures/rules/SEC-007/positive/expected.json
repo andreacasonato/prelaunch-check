@@ -1,0 +1,14 @@
+[
+  {
+    "path": "config/mongo.js",
+    "line": 1,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "src/db.ts",
+    "line": 4,
+    "severity": "critical",
+    "confidence": "high"
+  }
+]

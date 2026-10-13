@@ -1,0 +1,14 @@
+name: Per job
+on: push
+jobs:
+  a:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - run: echo a
+  b:
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - run: echo b

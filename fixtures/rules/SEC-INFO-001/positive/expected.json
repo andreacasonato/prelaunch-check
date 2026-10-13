@@ -1,0 +1,26 @@
+[
+  {
+    "path": "src/firebase.ts",
+    "line": 2,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "src/stripe-again.ts",
+    "line": 1,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "src/supabase.ts",
+    "line": 1,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "src/supabase.ts",
+    "line": 2,
+    "severity": "info",
+    "confidence": "high"
+  }
+]

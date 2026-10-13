@@ -1,0 +1,8 @@
+[
+  {
+    "path": "next.config.js",
+    "line": 3,
+    "severity": "medium",
+    "confidence": "high"
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "path": ".github/workflows/pr.yml",
+    "line": 13,
+    "severity": "high",
+    "confidence": "high"
+  }
+]

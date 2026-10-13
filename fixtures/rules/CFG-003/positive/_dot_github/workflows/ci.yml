@@ -1,0 +1,13 @@
+name: CI
+on: push
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: someone/setup-thing@main
+      - uses: "actions/cache@v4.2.0"
+  reuse:
+    uses: org/shared/.github/workflows/build.yml@v1

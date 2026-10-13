@@ -1,0 +1,14 @@
+name: Triage
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: read
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          TITLE: ${{ github.event.issue.title }}
+        run: echo "New issue: $TITLE"
+      - run: echo "${{ github.sha }} ${{ github.event.issue.number }}"

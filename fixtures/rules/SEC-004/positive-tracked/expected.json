@@ -1,0 +1,8 @@
+[
+  {
+    "path": ".env.production",
+    "line": null,
+    "severity": "high",
+    "confidence": "high"
+  }
+]

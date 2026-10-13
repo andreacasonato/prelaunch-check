@@ -4,4 +4,42 @@ Copyright (c) 2026 Andrea Casonato. Licensed under the MIT License (see LICENSE)
 This product includes material from the following third-party projects.
 Each entry names the material, where it is used, and its license.
 
-(No third-party material yet.)
+-------------------------------------------------------------------------------
+gitleaks (https://github.com/gitleaks/gitleaks), v8.30.1, config/gitleaks.toml
+
+Used in: packages/core/src/rules/secrets/patterns.ts
+What:    Secret-detection regular expressions, keywords, entropy thresholds and
+         allowlists for these rules: anthropic-api-key, anthropic-admin-api-key,
+         openai-api-key, aws-access-token, github-pat, github-fine-grained-pat,
+         github-oauth, github-app-token, github-refresh-token, gitlab-pat,
+         slack-bot-token, slack-user-token, slack-app-token, slack-webhook-url,
+         sendgrid-api-token, twilio-api-key, npm-access-token, pypi-upload-token,
+         huggingface-access-token, digitalocean-pat, digitalocean-access-token,
+         shopify-access-token, shopify-custom-access-token,
+         shopify-private-app-access-token, linear-api-key, planetscale-password,
+         planetscale-api-token, doppler-api-token, databricks-api-token,
+         perplexity-api-key, stripe-access-token (body), gcp-api-key, jwt,
+         private-key (header form), and part of the global allowlist.
+         Go/RE2-only syntax was translated to equivalent JavaScript.
+
+MIT License
+
+Copyright (c) 2019 Zachary Rice
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

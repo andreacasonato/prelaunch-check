@@ -1,0 +1,14 @@
+[
+  {
+    "path": ".github/workflows/triage.yml",
+    "line": 11,
+    "severity": "high",
+    "confidence": "medium"
+  },
+  {
+    "path": ".github/workflows/triage.yml",
+    "line": 15,
+    "severity": "high",
+    "confidence": "medium"
+  }
+]

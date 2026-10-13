@@ -1,0 +1,44 @@
+[
+  {
+    "path": "server/keys.js",
+    "line": 2,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "server/keys.js",
+    "line": 3,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "server/keys.js",
+    "line": 4,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "server/keys.js",
+    "line": 5,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "server/keys.js",
+    "line": 6,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "src/payments.ts",
+    "line": 4,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "src/test-mode.ts",
+    "line": 1,
+    "severity": "medium",
+    "confidence": "high"
+  }
+]

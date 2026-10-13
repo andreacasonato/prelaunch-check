@@ -1,0 +1,7 @@
+{
+  "name": "vuln-vite-firebase",
+  "private": true,
+  "type": "module",
+  "dependencies": { "firebase": "11.0.0", "react": "19.0.0", "stripe": "17.0.0" },
+  "devDependencies": { "vite": "7.0.0" }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "dist/assets/index.js.map",
+    "line": null,
+    "severity": "medium",
+    "confidence": "high"
+  },
+  {
+    "path": "vite.config.ts",
+    "line": 4,
+    "severity": "medium",
+    "confidence": "high"
+  }
+]

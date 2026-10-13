@@ -1,0 +1,14 @@
+[
+  {
+    "path": ".env",
+    "line": null,
+    "severity": "high",
+    "confidence": "high"
+  },
+  {
+    "path": ".env.example",
+    "line": 2,
+    "severity": "high",
+    "confidence": "high"
+  }
+]

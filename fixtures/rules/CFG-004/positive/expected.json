@@ -1,0 +1,14 @@
+[
+  {
+    "path": ".github/workflows/admin.yml",
+    "line": 3,
+    "severity": "medium",
+    "confidence": "high"
+  },
+  {
+    "path": ".github/workflows/release.yml",
+    "line": 1,
+    "severity": "medium",
+    "confidence": "high"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "certs/server.pem",
+    "line": 1,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "deploy/id_rsa",
+    "line": 1,
+    "severity": "critical",
+    "confidence": "high"
+  }
+]

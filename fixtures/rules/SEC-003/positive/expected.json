@@ -1,0 +1,26 @@
+[
+  {
+    "path": ".env.local",
+    "line": 3,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": ".env.local",
+    "line": 4,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": ".env.local",
+    "line": 5,
+    "severity": "critical",
+    "confidence": "medium"
+  },
+  {
+    "path": ".env.local",
+    "line": 6,
+    "severity": "critical",
+    "confidence": "high"
+  }
+]

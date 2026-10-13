@@ -22,6 +22,7 @@ import { computeCounts, computeScore, computeVerdict, PER_RULE_CAP_MULTIPLIER, W
 import { CHECKLIST } from "../checklist/items.js";
 import { compareFindings } from "./sort.js";
 import { renderTemplate } from "./template.js";
+import { scrubEvidence } from "./scrub.js";
 import { RULESET_VERSION, SCHEMA_VERSION, TOOL_NAME } from "../version.js";
 import { DEFAULT_RULES } from "../rules/index.js";
 
@@ -183,6 +184,7 @@ export async function runScan(input: ScanInput): Promise<Report> {
         }
       }
     }
+    f.evidence = scrubEvidence(f.evidence);
     const setting = config.rules[rule.meta.id];
     const severity = (typeof setting === "object" && setting.severity) || f.severity || rule.meta.severity;
     const title = f.title ?? rule.meta.title;

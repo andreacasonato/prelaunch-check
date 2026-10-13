@@ -1,0 +1,8 @@
+name: Admin
+on: workflow_dispatch
+permissions: write-all
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo hi
