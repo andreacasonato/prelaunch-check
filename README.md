@@ -164,6 +164,7 @@ npx prelaunch-check scan [folder]        Scan a project folder (default: the cur
 npx prelaunch-check init                 Create a config file
 npx prelaunch-check rules [--json]       List every rule
 npx prelaunch-check explain <RULE-ID>    Explain one rule and how to fix it
+npx prelaunch-check audit-prompt         Print the copy-paste audit prompt for AI coding tools
 ```
 
 **Exit codes** (useful in automated pipelines): `0` = nothing at or above `--fail-on`; `1` = problems found; `2` = wrong option or config; `3` = the scan couldn't run.
@@ -261,6 +262,10 @@ Use this before the first npm release, or if you want to try the latest changes.
 | "Dependency check skipped: couldn't reach api.osv.dev" | You're offline or behind a firewall. Everything else still ran. Add `--offline` to hide the message. |
 | "Supabase detected but no migration files found" | Your tables were created in the Supabase dashboard, so their access rules aren't in your project files. Export them with `supabase db pull` and scan again. |
 | A finding is wrong | Record it in the config file with a reason, and please [open an issue](https://github.com/andreacasonato/prelaunch-check/issues) labelled `false-positive` with a made-up example (never real code or keys). |
+
+## Prefer to ask your AI coding tool?
+
+[AUDIT-PROMPT.md](AUDIT-PROMPT.md) is a ready-made prompt you can paste into Claude Code, Cursor or a similar tool. It walks the agent through the same checks, step by step, without installing anything. It's generated from the scanner's own rules, so it stays in sync (`npx prelaunch-check audit-prompt` prints the latest version). The scanner is still more reliable: it's rule-based, repeatable, and your code never leaves your computer.
 
 ## Contributing, security and license
 

@@ -1,6 +1,6 @@
 // prelaunch-check CLI (docs/02-TRD.md §10). Exit codes: 0 ok · 1 findings at/above --fail-on · 2 usage/config · 3 scan error.
 import { parseArgs } from "node:util";
-import { DEFAULT_RULES } from "@prelaunch-check/core";
+import { DEFAULT_RULES, auditPrompt } from "@prelaunch-check/core";
 import type { Io } from "./io.js";
 import { runScanCommand, ScanError, UsageError } from "./commands/scan.js";
 import { runInit } from "./commands/init.js";
@@ -18,6 +18,7 @@ Usage
   prelaunch-check init                 Create a prelaunch-check.config.json
   prelaunch-check rules [--json]       List every rule
   prelaunch-check explain <RULE-ID>    Explain a rule and how to fix it
+  prelaunch-check audit-prompt         Print a copy-paste audit prompt for AI coding agents
 
 Scan options
   --url <https://…>          Also check the live site: headers, cookies, exposed files (≤ 40 GET requests)
@@ -105,6 +106,9 @@ export async function main(argv: string[], io: Io): Promise<number> {
       }
       case "init":
         return await runInit(io);
+      case "audit-prompt":
+        io.stdout(auditPrompt());
+        return 0;
       case "rules":
         io.stdout(v.json ? rulesJson(allRules) : rulesText(allRules));
         return 0;

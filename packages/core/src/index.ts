@@ -20,3 +20,4 @@ export { detectProfile, parsePackageJson, depNames } from "./detect/profile.js";
 export { truncateMiddle } from "./util/format.js";
 export { toSarif, SECURITY_SEVERITY, type SarifLog } from "./formats/sarif.js";
 export { toHtml } from "./formats/html.js";
+export { auditPrompt } from "./formats/audit-prompt.js";
