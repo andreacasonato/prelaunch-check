@@ -1,6 +1,8 @@
 node_modules/
-dist/
-coverage/
+# Build output of this repo's own packages only (fixtures contain deliberate dist/ folders)
+/packages/*/dist/
+/apps/*/dist/
+/coverage/
 *.tgz
 .DS_Store
 
