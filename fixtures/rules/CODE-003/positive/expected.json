@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/Comment.tsx",
+    "line": 2,
+    "severity": "medium",
+    "confidence": "low"
+  },
+  {
+    "path": "src/Comment.tsx",
+    "line": 6,
+    "severity": "medium",
+    "confidence": "low"
+  }
+]

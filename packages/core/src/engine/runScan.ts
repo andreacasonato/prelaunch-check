@@ -293,7 +293,7 @@ function collectEndpoints(findings: Finding[]): Endpoint[] {
   for (const f of findings) {
     if (f.ruleId !== ENDPOINT_RULE) continue;
     const d = f.evidence.detail ?? {};
-    if (typeof d.route !== "string" || typeof d.method !== "string") continue;
+    if (d.kind !== "endpoint" || typeof d.route !== "string" || typeof d.method !== "string") continue;
     out.push({
       method: d.method,
       route: d.route,

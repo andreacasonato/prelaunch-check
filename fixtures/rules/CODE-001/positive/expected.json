@@ -1,0 +1,20 @@
+[
+  {
+    "path": "src/db.ts",
+    "line": 4,
+    "severity": "high",
+    "confidence": "medium"
+  },
+  {
+    "path": "src/db.ts",
+    "line": 8,
+    "severity": "high",
+    "confidence": "medium"
+  },
+  {
+    "path": "src/db.ts",
+    "line": 12,
+    "severity": "high",
+    "confidence": "medium"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "database.rules.json",
+    "line": 3,
+    "severity": "medium",
+    "confidence": "medium"
+  },
+  {
+    "path": "firestore.rules",
+    "line": 6,
+    "severity": "medium",
+    "confidence": "medium"
+  }
+]

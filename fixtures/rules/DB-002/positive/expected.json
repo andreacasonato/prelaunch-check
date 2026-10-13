@@ -1,0 +1,14 @@
+[
+  {
+    "path": "supabase/migrations/20260101000000_feedback.sql",
+    "line": 4,
+    "severity": "high",
+    "confidence": "high"
+  },
+  {
+    "path": "supabase/migrations/20260101000000_feedback.sql",
+    "line": 5,
+    "severity": "high",
+    "confidence": "high"
+  }
+]

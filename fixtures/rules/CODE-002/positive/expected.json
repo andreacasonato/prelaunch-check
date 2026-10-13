@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/calc.js",
+    "line": 2,
+    "severity": "medium",
+    "confidence": "medium"
+  },
+  {
+    "path": "src/calc.js",
+    "line": 5,
+    "severity": "medium",
+    "confidence": "medium"
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "chats": { ".write": "auth != null" }
+  }
+}

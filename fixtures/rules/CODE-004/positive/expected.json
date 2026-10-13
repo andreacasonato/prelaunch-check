@@ -1,0 +1,14 @@
+[
+  {
+    "path": "server/index.js",
+    "line": 5,
+    "severity": "high",
+    "confidence": "high"
+  },
+  {
+    "path": "server/index.js",
+    "line": 8,
+    "severity": "high",
+    "confidence": "high"
+  }
+]

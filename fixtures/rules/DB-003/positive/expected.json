@@ -1,0 +1,20 @@
+[
+  {
+    "path": "supabase/migrations/20260101000000_profiles.sql",
+    "line": 5,
+    "severity": "high",
+    "confidence": "medium"
+  },
+  {
+    "path": "supabase/migrations/20260101000000_profiles.sql",
+    "line": 6,
+    "severity": "high",
+    "confidence": "medium"
+  },
+  {
+    "path": "supabase/migrations/20260102000000_roles.sql",
+    "line": 1,
+    "severity": "high",
+    "confidence": "medium"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "supabase/migrations/20260101000000_init.sql",
+    "line": 2,
+    "severity": "high",
+    "confidence": "medium"
+  },
+  {
+    "path": "supabase/migrations/20260101000000_init.sql",
+    "line": 8,
+    "severity": "high",
+    "confidence": "medium"
+  }
+]

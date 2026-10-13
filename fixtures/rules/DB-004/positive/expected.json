@@ -1,0 +1,26 @@
+[
+  {
+    "path": "database.rules.json",
+    "line": 3,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "database.rules.json",
+    "line": 5,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "firestore.rules",
+    "line": 6,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "storage.rules",
+    "line": 5,
+    "severity": "critical",
+    "confidence": "high"
+  }
+]

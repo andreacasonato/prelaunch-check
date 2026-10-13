@@ -1,0 +1,8 @@
+[
+  {
+    "path": "app/pay/PayButton.tsx",
+    "line": 3,
+    "severity": "critical",
+    "confidence": "medium"
+  }
+]

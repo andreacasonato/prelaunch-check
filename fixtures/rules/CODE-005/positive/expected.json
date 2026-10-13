@@ -1,0 +1,20 @@
+[
+  {
+    "path": "server/start.ts",
+    "line": 1,
+    "severity": "medium",
+    "confidence": "medium"
+  },
+  {
+    "path": "server/start.ts",
+    "line": 4,
+    "severity": "medium",
+    "confidence": "medium"
+  },
+  {
+    "path": "server/start.ts",
+    "line": 5,
+    "severity": "medium",
+    "confidence": "medium"
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "path": "supabase/migrations/20260101000000_notes.sql",
+    "line": 3,
+    "severity": "low",
+    "confidence": "medium"
+  }
+]

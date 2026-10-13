@@ -1,0 +1,56 @@
+[
+  {
+    "path": "app/(shop)/api/orders/route.ts",
+    "line": 3,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "app/api/admin/users/route.ts",
+    "line": 3,
+    "severity": "medium",
+    "confidence": "low"
+  },
+  {
+    "path": "app/api/admin/users/route.ts",
+    "line": 3,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "app/api/admin/users/route.ts",
+    "line": 7,
+    "severity": "medium",
+    "confidence": "low"
+  },
+  {
+    "path": "app/api/admin/users/route.ts",
+    "line": 7,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "pages/api/health.ts",
+    "line": 1,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "server/app.js",
+    "line": 3,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "server/app.js",
+    "line": 4,
+    "severity": "info",
+    "confidence": "high"
+  },
+  {
+    "path": "supabase/functions/send-email/index.ts",
+    "line": 1,
+    "severity": "info",
+    "confidence": "high"
+  }
+]

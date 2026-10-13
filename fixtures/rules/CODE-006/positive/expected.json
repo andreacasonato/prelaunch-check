@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/checkout.ts",
+    "line": 1,
+    "severity": "critical",
+    "confidence": "medium"
+  },
+  {
+    "path": "src/checkout.ts",
+    "line": 5,
+    "severity": "critical",
+    "confidence": "medium"
+  }
+]

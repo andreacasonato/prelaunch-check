@@ -98,9 +98,17 @@ export const FAKE: Record<string, string> = {
   OPENSSH_PRIVATE_KEY: pem("pk2", ["OPENSSH", "PRIVATE", "KEY"].join(" ")),
   DB_PASSWORD: rand("dbpw", 18, ALNUM),
   // Whole connection URLs are placeholders too, so no credential-shaped URI is ever committed.
-  POSTGRES_PROD_URL: ["postgres", "://admin:", rand("dbpw", 18, ALNUM), "@db.prod.example.com:5432/app"].join(""),
+  POSTGRES_PROD_URL: ["postgres", "://admin:", rand("dbpw", 18, ALNUM), "@db.prod.example.com:5432/app"].join(
+    "",
+  ),
   POSTGRES_APP_URL: ["postgres", "://app:", rand("dbpw", 18, ALNUM), "@db.example.com:5432/app"].join(""),
-  MONGO_ATLAS_URL: ["mongodb+srv", "://svc:", rand("dbpw", 18, ALNUM), "@cluster0.abcde.mongodb", ".net/app"].join(""),
+  MONGO_ATLAS_URL: [
+    "mongodb+srv",
+    "://svc:",
+    rand("dbpw", 18, ALNUM),
+    "@cluster0.abcde.mongodb",
+    ".net/app",
+  ].join(""),
   // Placeholder-looking values that must NOT be reported.
   STRIPE_SK_PLACEHOLDER: j("sk", "live", "x".repeat(24)),
   AWS_EXAMPLE_KEY: "AK" + "IAIOSFODNN7" + "EXAMPLE",
