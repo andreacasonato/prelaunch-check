@@ -1,0 +1,8 @@
+[
+  {
+    "path": "https://shop.example.com/.well-known/security.txt",
+    "line": null,
+    "severity": "low",
+    "confidence": "high"
+  }
+]

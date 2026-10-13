@@ -57,10 +57,10 @@ function row(p: Painter, f: Finding, titleWidth: number, locWidth: number): stri
   return ` ${sev} ${id}${truncate(f.title, titleWidth).padEnd(titleWidth)}  ${p.dim(loc)}`;
 }
 
-/** Column widths shared by every row: location gets up to 40% of the line, the title the rest. */
+/** Column widths shared by every row: location gets up to a third of the line, the title the rest. */
 function columns(rows: Finding[], width: number): { titleWidth: number; locWidth: number } {
   const longestLoc = Math.max(0, ...rows.map((f) => locationText(f).length));
-  const locWidth = Math.min(longestLoc, Math.max(20, Math.floor(width * 0.4)));
+  const locWidth = Math.min(longestLoc, Math.max(20, Math.floor(width * 0.32)));
   const titleWidth = Math.max(20, width - 1 - 10 - 13 - 2 - locWidth);
   return { titleWidth, locWidth };
 }

@@ -14,11 +14,14 @@ Find the security holes in your app before you launch. Local-first: your code ne
 
 Usage
   prelaunch-check scan [path]          Scan a project folder (default ".")
+  prelaunch-check scan --url <url>     Scan a live site you own (add a path to scan both)
   prelaunch-check init                 Create a prelaunch-check.config.json
   prelaunch-check rules [--json]       List every rule
   prelaunch-check explain <RULE-ID>    Explain a rule and how to fix it
 
 Scan options
+  --url <https://…>          Also check the live site: headers, cookies, exposed files (≤ 40 GET requests)
+  --yes-i-am-authorized      Skip the "do you own this site?" question (for CI)
   --offline                  Don't look up dependencies online (OSV, npm registry)
   --format json,md           Report formats to write (json is always written)
   --out <dir>                Where to write reports (default ./prelaunch-check-report)
@@ -84,8 +87,9 @@ export async function main(argv: string[], io: Io): Promise<number> {
         if (v["use-osv-scanner"])
           io.stderr("Note: --use-osv-scanner isn't supported yet; using the OSV API instead.\n");
         return await runScanCommand(io, {
-          path: rest[0] ?? ".",
+          ...(rest[0] !== undefined ? { path: rest[0] } : {}),
           ...(v.url !== undefined ? { url: v.url } : {}),
+          yesIAmAuthorized: v["yes-i-am-authorized"] ?? false,
           offline: v.offline ?? false,
           format: v.format ?? "json",
           out: v.out ?? "prelaunch-check-report",

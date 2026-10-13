@@ -92,6 +92,22 @@ Then open `prelaunch-check-report/prelaunch-check-report.md` in any editor.
 
 ---
 
+## Check your live website too
+
+Once your app is online, Prelaunch Check can look at it from the outside, the way a stranger would. Only do this for **sites you own or have permission to test**.
+
+```sh
+npx prelaunch-check scan . --url https://your-app.com
+```
+
+Leave out the `.` to check only the website. It asks you to confirm that you own the site before sending anything. In automated pipelines, add `--yes-i-am-authorized` to confirm in advance.
+
+It checks HTTPS and the redirect from http://, security headers (HSTS, Content-Security-Policy, clickjacking and others), cookie settings, files that should never be public (such as `.env`, `.git` or backup zips), public API docs and source maps, secret keys in the JavaScript your site serves, risky CORS settings, `security.txt`, and your HTTPS certificate.
+
+**What it does not do:** it sends at most 40 ordinary page requests (`GET`), the same kind a browser sends. It never submits forms, never tries to log in, and never sends attack payloads. Its requests identify themselves as `prelaunch-check`.
+
+---
+
 ## What it checks
 
 | Area | Examples |
@@ -101,24 +117,28 @@ Then open `prelaunch-check-report/prelaunch-check-report.md` in any editor.
 | **Dependencies** | Known vulnerabilities (via the OSV database); missing lockfile; packages that don't exist on npm (a sign of an AI-invented name); very new packages; `"*"` versions. |
 | **Code patterns** | SQL built from strings, `eval`, unsafe HTML, wide-open CORS with cookies, secrets printed to logs, secret-key SDKs in browser code, and a list of your API endpoints showing which ones check login. |
 | **Project config** | Source maps in production builds; missing `.gitignore` entries; risky GitHub Actions workflows. |
+| **Live site** (with `--url`) | HTTPS and redirects, security headers, cookie flags, exposed files and API docs, public source maps, secrets in served JavaScript, CORS, `security.txt`, certificate expiry, mixed content. |
 | **Manual checklist** | 18 things no scanner can verify, such as "can I give myself premium by editing my own data?". Printed in every report. |
 
 Run `npx prelaunch-check rules` to see every rule.
 
-**Coming next:** live-site checks (`--url`) for security headers, cookies and exposed files (version 0.2); SARIF and HTML reports and baselines (0.3); and a website where you can pick a folder and scan it in your browser.
+**Coming next:** SARIF and HTML reports and baselines (0.3), and a website where you can pick a folder and scan it in your browser.
 
 ## Privacy: what leaves your computer
 
 - **Your code never does.** Files are read on your computer, and reports are written to your computer.
 - **Secrets are always hidden** in every output, e.g. `sk_l…9xQz`. There is no option to show them.
 - **Reports never contain full paths** to your files, your username or machine name.
-- **The only network requests** are package names and version numbers, sent to the public [OSV](https://osv.dev) vulnerability database and the npm registry to check your dependencies. Add `--offline` to turn this off completely.
+- **For a folder scan, the only network requests** are package names and version numbers, sent to the public [OSV](https://osv.dev) vulnerability database and the npm registry to check your dependencies. Add `--offline` to turn this off completely.
+- **For a live-site scan** (`--url`), it requests pages from the site you name, and nothing else.
 - No telemetry, no analytics, no account.
 
 ## Options
 
 ```
 npx prelaunch-check scan [folder]        Scan a project folder (default: the current folder)
+  --url <https://…>                      Also check your live site (asks you to confirm you own it)
+  --yes-i-am-authorized                  Confirm site ownership in advance (for CI)
   --offline                              No online dependency checks
   --format json,md                       Which reports to write (json is always written)
   --out <folder>                         Where to write reports (default: ./prelaunch-check-report)
@@ -170,7 +190,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with: { node-version: 24 }
-      - run: npx prelaunch-check@0.1.0 scan . --fail-on high
+      - run: npx prelaunch-check@0.2.0 scan . --fail-on high
 ```
 
 Actions are pinned to exact commit IDs, which is what Prelaunch Check's own CFG-003 rule recommends.

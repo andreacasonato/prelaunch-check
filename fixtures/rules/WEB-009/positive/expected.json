@@ -1,0 +1,20 @@
+[
+  {
+    "path": "https://shop.example.com/",
+    "line": null,
+    "severity": "medium",
+    "confidence": "medium"
+  },
+  {
+    "path": "https://shop.example.com/",
+    "line": null,
+    "severity": "low",
+    "confidence": "medium"
+  },
+  {
+    "path": "https://shop.example.com/",
+    "line": null,
+    "severity": "low",
+    "confidence": "medium"
+  }
+]

@@ -16,12 +16,16 @@ import { NodeFileSource } from "../sources/node-files.js";
 import { createOnlineServices, type OnlineStatus } from "../online/services.js";
 import { createGitleaksRule, gitleaksAvailable } from "../integrations/gitleaks.js";
 import { painter, renderSummary } from "../format/terminal.js";
+import { collectSite, normaliseTarget, type CollectOptions } from "../site/collect.js";
+import type { SiteSnapshot } from "@prelaunch-check/core";
 import { CONFIG_FILE } from "./init.js";
 import { VERSION, WEB_APP_URL } from "../version.js";
 
 export interface ScanFlags {
-  path: string;
+  /** Folder to scan; absent for a live-site-only scan. */
+  path?: string;
   url?: string;
+  yesIAmAuthorized: boolean;
   offline: boolean;
   format: string;
   out: string;
@@ -131,15 +135,42 @@ export function exceedsThreshold(r: Report, failOn: Severity | "none"): boolean 
   );
 }
 
-export async function runScanCommand(io: Io, flags: ScanFlags): Promise<number> {
-  const root = resolve(io.cwd, flags.path);
-  try {
-    if (!(await stat(root)).isDirectory()) throw new ScanError(`${flags.path} is not a folder.`);
-  } catch (e) {
-    if (e instanceof ScanError) throw e;
-    throw new ScanError(`Couldn't read ${flags.path}: does the folder exist?`);
+/** Ownership confirmation (APP-FLOW C-02). Nothing is sent before this returns true. */
+async function confirmOwnership(io: Io, flags: ScanFlags, host: string): Promise<void> {
+  if (flags.yesIAmAuthorized) return;
+  if (!io.isTTY)
+    throw new UsageError(
+      `Live-site scans need your confirmation that you own ${host} or are allowed to test it.\nIn CI or scripts, add --yes-i-am-authorized.`,
+    );
+  const ok = await io.confirm(
+    `You're about to send up to 40 ordinary requests to ${host}. Only scan sites you own or are allowed to test. Continue? (y/N) `,
+  );
+  if (!ok) throw new UsageError("Cancelled. Nothing was sent.");
+}
+
+export async function runScanCommand(
+  io: Io,
+  flags: ScanFlags,
+  siteOptions: Partial<CollectOptions> = {},
+): Promise<number> {
+  if (flags.path === undefined && !flags.url) flags.path = ".";
+  const root = flags.path !== undefined ? resolve(io.cwd, flags.path) : null;
+  if (root) {
+    try {
+      if (!(await stat(root)).isDirectory()) throw new ScanError(`${flags.path} is not a folder.`);
+    } catch (e) {
+      if (e instanceof ScanError) throw e;
+      throw new ScanError(`Couldn't read ${flags.path}: does the folder exist?`);
+    }
   }
-  if (flags.url) throw new UsageError("Live-site scanning (--url) arrives in version 0.2.0.");
+  let target: URL | null = null;
+  if (flags.url) {
+    try {
+      target = normaliseTarget(flags.url);
+    } catch (e) {
+      throw new UsageError((e as Error).message);
+    }
+  }
   if (flags.baseline) throw new UsageError("--baseline arrives in version 0.3.0.");
 
   const formats = flags.format
@@ -153,7 +184,7 @@ export async function runScanCommand(io: Io, flags: ScanFlags): Promise<number> 
   }
   if (!formats.includes("json")) formats.unshift("json");
 
-  const { config, warnings, errors } = resolveConfig(await loadConfigFile(io, flags, root));
+  const { config, warnings, errors } = resolveConfig(await loadConfigFile(io, flags, root ?? io.cwd));
   if (errors.length) throw new UsageError(`Config problems:\n  ${errors.join("\n  ")}`);
   for (const w of warnings) io.stderr(`Config warning: ${w}\n`);
   if (flags.failOn !== undefined) {
@@ -161,37 +192,67 @@ export async function runScanCommand(io: Io, flags: ScanFlags): Promise<number> 
       throw new UsageError(`--fail-on must be critical, high, medium, low or none.`);
     config.failOn = flags.failOn as Severity | "none";
   }
-  const online = config.online && !flags.offline;
+  const online = config.online && !flags.offline && root !== null;
+  // "used" means the lookups were enabled for this run; any error flips a service to "failed".
+  const status: OnlineStatus = online
+    ? { osv: "used", npmRegistry: "used" }
+    : { osv: "off", npmRegistry: "off" };
 
   // Don't scan our own previous reports.
   const outDir = resolve(io.cwd, flags.out);
-  const outRel = relative(root, outDir);
-  if (outRel && !outRel.startsWith("..") && !outRel.startsWith(sep))
-    config.ignorePaths.push(`${outRel.split(sep).join("/")}/**`);
+  if (root) {
+    const outRel = relative(root, outDir);
+    if (outRel && !outRel.startsWith("..") && !outRel.startsWith(sep))
+      config.ignorePaths.push(`${outRel.split(sep).join("/")}/**`);
+  }
+
+  // Live site: confirm ownership first (nothing is sent before), then collect.
+  let site: SiteSnapshot | undefined;
+  let siteDurationMs = 0;
+  if (target) {
+    await confirmOwnership(io, flags, target.host);
+    const stageLine = (t: string) => {
+      if (!flags.quiet) io.stderr(io.isTTY ? `\r\x1b[2K${t}…` : `${t}…\n`);
+    };
+    const collected = await collectSite(target, {
+      fetch: io.fetch,
+      onStage: stageLine,
+      now: () => io.now(),
+      ...siteOptions,
+    });
+    if (io.isTTY && !flags.quiet) io.stderr("\r\x1b[2K");
+    site = collected.snapshot;
+    siteDurationMs = collected.durationMs;
+    const page = "status" in site.root.response ? site.root.response : null;
+    const httpAnswered = site.httpRoot !== undefined && "status" in site.httpRoot.response;
+    const certProblem = site.tls !== undefined && "error" in site.tls;
+    if (!page && !httpAnswered && !certProblem)
+      throw new ScanError(`Couldn't reach ${target.host}: is the URL right and the site up?`);
+    if (page && (page.status === 401 || page.status === 403))
+      io.stderr(
+        "⚠ The homepage requires login; header checks still ran, but exposed-file checks may be incomplete.\n",
+      );
+  }
 
   const rules: Rule[] = [...DEFAULT_RULES];
   let gitleaks = false;
-  if (flags.gitleaks !== "off") {
+  if (root && flags.gitleaks !== "off") {
     gitleaks = await gitleaksAvailable();
     if (!gitleaks && flags.gitleaks === "on")
       io.stderr("⚠ --use-gitleaks: gitleaks isn't on your PATH, so git history wasn't checked.\n");
     rules.push(createGitleaksRule(root));
   }
 
-  // "used" means the lookups were enabled for this run; any error flips a service to "failed".
-  const status: OnlineStatus = online
-    ? { osv: "used", npmRegistry: "used" }
-    : { osv: "off", npmRegistry: "off" };
   const progress = progressReporter(io, flags.quiet);
   const report = await runScan({
-    files: new NodeFileSource(root),
-    folderName: basename(root),
+    ...(root ? { files: new NodeFileSource(root), folderName: basename(root) } : {}),
+    ...(site ? { site, siteDurationMs } : {}),
     config,
     toolVersion: VERSION,
     now: io.now(),
     rules,
     capabilities: { gitleaks, git: true },
-    ...(online ? { online: createOnlineServices(io.fetch, status), onlineStatus: status } : {}),
+    ...(online && root ? { online: createOnlineServices(io.fetch, status), onlineStatus: status } : {}),
     onProgress: (p) => progress.update(p.stage, p.done, p.total),
   });
   progress.done();
@@ -214,9 +275,14 @@ export async function runScanCommand(io: Io, flags: ScanFlags): Promise<number> 
     const stack = [...report.profile.frameworks, ...report.profile.backends, ...report.profile.services].map(
       (s) => FRAMEWORK_LABEL[s] ?? s,
     );
-    io.stdout(
-      `Scanned ${report.target.folderName}${stack.length ? ` (${stack.join(" · ")})` : ""}: ${report.coverage.filesScanned.toLocaleString("en-US")} files, ${report.coverage.filesSkippedTotal.toLocaleString("en-US")} skipped\n\n`,
-    );
+    const what = [report.target.folderName, report.target.url].filter(Boolean).join(" + ");
+    const parts: string[] = [];
+    if (root)
+      parts.push(
+        `${report.coverage.filesScanned.toLocaleString("en-US")} files, ${report.coverage.filesSkippedTotal.toLocaleString("en-US")} skipped`,
+      );
+    if (site) parts.push(`${site.requestCount} requests to the site`);
+    io.stdout(`Scanned ${what}${stack.length ? ` (${stack.join(" · ")})` : ""}: ${parts.join(", ")}\n\n`);
     if (status.osv === "failed" || status.npmRegistry === "failed")
       io.stderr(
         "⚠ Dependency check skipped: couldn't reach api.osv.dev or the npm registry (use --offline to silence)\n",

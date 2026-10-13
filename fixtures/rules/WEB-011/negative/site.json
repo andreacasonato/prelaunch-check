@@ -1,0 +1,637 @@
+{
+  "target": "https://shop.example.com/",
+  "collectedAt": "2026-10-13T10:00:00Z",
+  "toolVersion": "0.0.0-test",
+  "httpRoot": {
+    "request": {
+      "method": "GET",
+      "url": "http://shop.example.com/",
+      "headers": {
+        "user-agent": "prelaunch-check/test"
+      }
+    },
+    "response": {
+      "status": 301,
+      "headers": [
+        [
+          "location",
+          "https://shop.example.com/"
+        ]
+      ],
+      "elapsedMs": 42
+    }
+  },
+  "root": {
+    "request": {
+      "method": "GET",
+      "url": "https://shop.example.com/",
+      "headers": {
+        "user-agent": "prelaunch-check/test"
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": [
+        [
+          "content-type",
+          "text/html; charset=utf-8"
+        ],
+        [
+          "strict-transport-security",
+          "max-age=63072000; includeSubDomains"
+        ],
+        [
+          "content-security-policy",
+          "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+        ],
+        [
+          "x-frame-options",
+          "DENY"
+        ],
+        [
+          "x-content-type-options",
+          "nosniff"
+        ],
+        [
+          "referrer-policy",
+          "strict-origin-when-cross-origin"
+        ],
+        [
+          "server",
+          "nginx"
+        ],
+        [
+          "set-cookie",
+          "session=redacted-in-fixture; Path=/; Secure; HttpOnly; SameSite=Lax"
+        ]
+      ],
+      "elapsedMs": 42,
+      "bodyText": "<!doctype html><html><head><title>Shop</title><link rel=\"stylesheet\" href=\"/assets/app.css\"></head>\n<body><img src=\"https://cdn.example.com/logo.png\" alt=\"\"><a href=\"http://old.example.com/\">old site</a>\n<script src=\"/assets/app.js\"></script></body></html>"
+    }
+  },
+  "redirectChain": [
+    "https://shop.example.com/"
+  ],
+  "tls": {
+    "validTo": "2027-06-01T00:00:00.000Z",
+    "issuer": "Let's Encrypt",
+    "protocol": "TLSv1.3"
+  },
+  "baseline404": {
+    "request": {
+      "method": "GET",
+      "url": "https://shop.example.com/plc-0b6c2a8e-baseline",
+      "headers": {
+        "user-agent": "prelaunch-check/test"
+      }
+    },
+    "response": {
+      "status": 404,
+      "headers": [
+        [
+          "content-type",
+          "text/html"
+        ]
+      ],
+      "elapsedMs": 42,
+      "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+    }
+  },
+  "probes": [
+    {
+      "id": "env",
+      "path": "/.env",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/.env",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "env-local",
+      "path": "/.env.local",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/.env.local",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "env-production",
+      "path": "/.env.production",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/.env.production",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "git-head",
+      "path": "/.git/HEAD",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/.git/HEAD",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "git-config",
+      "path": "/.git/config",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/.git/config",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "npmrc",
+      "path": "/.npmrc",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/.npmrc",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "ds-store",
+      "path": "/.DS_Store",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/.DS_Store",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "backup-zip",
+      "path": "/backup.zip",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/backup.zip",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "site-zip",
+      "path": "/site.zip",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/site.zip",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "www-zip",
+      "path": "/www.zip",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/www.zip",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "swagger",
+      "path": "/swagger",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/swagger",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "swagger-ui",
+      "path": "/swagger-ui.html",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/swagger-ui.html",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "api-docs",
+      "path": "/api-docs",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/api-docs",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "docs",
+      "path": "/docs",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/docs",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Docs</title></head><body>Help center</body></html>"
+        }
+      }
+    },
+    {
+      "id": "api-docs-2",
+      "path": "/api/docs",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/api/docs",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "openapi-json",
+      "path": "/openapi.json",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/openapi.json",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "swagger-json",
+      "path": "/swagger.json",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/swagger.json",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "api-openapi-json",
+      "path": "/api/openapi.json",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/api/openapi.json",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "admin",
+      "path": "/admin",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/admin",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "<!doctype html><html><head><title>Not found</title></head><body>Page not found</body></html>"
+        }
+      }
+    },
+    {
+      "id": "security-txt",
+      "path": "/.well-known/security.txt",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/.well-known/security.txt",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": [
+            [
+              "content-type",
+              "text/plain"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "Contact: mailto:security@shop.example.com\nExpires: 2027-12-31T23:59:59Z\n"
+        }
+      }
+    }
+  ],
+  "scripts": [
+    {
+      "url": "https://shop.example.com/assets/app.js",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/assets/app.js",
+          "headers": {
+            "user-agent": "prelaunch-check/test"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": [
+            [
+              "content-type",
+              "text/javascript"
+            ]
+          ],
+          "elapsedMs": 42,
+          "bodyText": "console.log('app');\n"
+        }
+      }
+    }
+  ],
+  "corsChecks": [
+    {
+      "url": "https://shop.example.com/",
+      "exchange": {
+        "request": {
+          "method": "GET",
+          "url": "https://shop.example.com/",
+          "headers": {
+            "user-agent": "prelaunch-check/test",
+            "origin": "https://cors-check.prelaunch-check.invalid"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": [
+            [
+              "content-type",
+              "text/html"
+            ],
+            [
+              "vary",
+              "Origin"
+            ]
+          ],
+          "elapsedMs": 42
+        }
+      }
+    }
+  ],
+  "requestCount": 26
+}

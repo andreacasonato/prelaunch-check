@@ -7,8 +7,14 @@ import { DEFAULT_RULES } from "../src/rules/index.js";
 import { MemoryFileSource } from "../src/sources/memory.js";
 import { runScan } from "../src/engine/runScan.js";
 import { resolveConfig } from "../src/config.js";
-import { FIXTURES, allFakeValues, fixtureGitTracked, loadFixtureDir } from "./support/fixtures.js";
-import type { OnlineServices, OsvVulnSummary } from "../src/types.js";
+import {
+  FIXTURES,
+  allFakeValues,
+  fixtureGitTracked,
+  fixtureSite,
+  loadFixtureDir,
+} from "./support/fixtures.js";
+import type { OnlineServices, OsvVulnSummary, SiteSnapshot } from "../src/types.js";
 
 /** Recorded online answers (online.json in a fixture case): no network in tests. */
 function recordedOnline(dir: string): OnlineServices | undefined {
@@ -49,11 +55,14 @@ async function scanCase(ruleId: string, dir: string) {
   const rule = DEFAULT_RULES.find((r) => r.meta.id === ruleId);
   if (!rule) throw new Error(`No registered rule ${ruleId}`);
   const tracked = fixtureGitTracked(dir);
-  const files = new MemoryFileSource(loadFixtureDir(dir), tracked ? { gitTracked: tracked } : {});
+  const fileMap = loadFixtureDir(dir);
+  const files = new MemoryFileSource(fileMap, tracked ? { gitTracked: tracked } : {});
   const online = recordedOnline(dir);
+  const site = fixtureSite<SiteSnapshot>(dir);
   return runScan({
     ...(online ? { online } : {}),
-    files,
+    ...(site ? { site } : {}),
+    ...(Object.keys(fileMap).length || !site ? { files } : {}),
     folderName: "fixture",
     config: resolveConfig({}).config,
     toolVersion: "0.0.0-test",

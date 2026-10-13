@@ -25,6 +25,24 @@ import { CODE_004 } from "./code/CODE-004.js";
 import { CODE_005 } from "./code/CODE-005.js";
 import { CODE_006 } from "./code/CODE-006.js";
 import { CODE_INV_001 } from "./code/CODE-INV-001.js";
+import { WEB_001 } from "./web/WEB-001.js";
+import { WEB_002 } from "./web/WEB-002.js";
+import { WEB_003 } from "./web/WEB-003.js";
+import { WEB_004 } from "./web/WEB-004.js";
+import { WEB_005 } from "./web/WEB-005.js";
+import { WEB_006 } from "./web/WEB-006.js";
+import { WEB_007 } from "./web/WEB-007.js";
+import { WEB_008 } from "./web/WEB-008.js";
+import { WEB_009 } from "./web/WEB-009.js";
+import { WEB_010 } from "./web/WEB-010.js";
+import { WEB_011 } from "./web/WEB-011.js";
+import { WEB_012 } from "./web/WEB-012.js";
+import { WEB_013 } from "./web/WEB-013.js";
+import { WEB_014 } from "./web/WEB-014.js";
+import { WEB_015 } from "./web/WEB-015.js";
+import { WEB_016 } from "./web/WEB-016.js";
+import { WEB_017 } from "./web/WEB-017.js";
+import { WEB_018 } from "./web/WEB-018.js";
 import { CFG_001 } from "./config/CFG-001.js";
 import { CFG_002 } from "./config/CFG-002.js";
 import { CFG_003 } from "./config/CFG-003.js";
@@ -64,4 +82,22 @@ export const DEFAULT_RULES: readonly Rule[] = [
   CFG_004,
   CFG_005,
   CFG_006,
+  WEB_001,
+  WEB_002,
+  WEB_003,
+  WEB_004,
+  WEB_005,
+  WEB_006,
+  WEB_007,
+  WEB_008,
+  WEB_009,
+  WEB_010,
+  WEB_011,
+  WEB_012,
+  WEB_013,
+  WEB_014,
+  WEB_015,
+  WEB_016,
+  WEB_017,
+  WEB_018,
 ];

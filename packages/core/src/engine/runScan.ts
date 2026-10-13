@@ -134,20 +134,19 @@ export async function runScan(input: ScanInput): Promise<Report> {
   const raw: Array<{ rule: Rule; finding: RawFinding }> = [];
 
   for (const stage of STAGE_ORDER) {
-    const stageRules = rules.filter((r) => r.meta.category === stage);
-    if (stageRules.length === 0) continue;
+    const runnable: Rule[] = [];
+    for (const rule of rules.filter((r) => r.meta.category === stage)) {
+      const skip =
+        skipReason(rule, input, files) ??
+        (rule.meta.appliesWhen && !rule.meta.appliesWhen(profile) ? ("not_applicable" as const) : null);
+      if (skip) rulesSkipped.push({ ruleId: rule.meta.id, reason: skip });
+      else runnable.push(rule);
+    }
+    // Only announce stages that actually run something.
+    if (runnable.length === 0) continue;
     progress({ stage });
-    for (const rule of stageRules) {
+    for (const rule of runnable) {
       throwIfAborted(signal);
-      const skip = skipReason(rule, input, files);
-      if (skip) {
-        rulesSkipped.push({ ruleId: rule.meta.id, reason: skip });
-        continue;
-      }
-      if (rule.meta.appliesWhen && !rule.meta.appliesWhen(profile)) {
-        rulesSkipped.push({ ruleId: rule.meta.id, reason: "not_applicable" });
-        continue;
-      }
       rulesRun.push(rule.meta.id);
       try {
         for (const finding of await rule.check(ctx)) raw.push({ rule, finding });

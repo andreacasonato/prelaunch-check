@@ -1,0 +1,8 @@
+[
+  {
+    "path": "http://shop.example.com/",
+    "line": null,
+    "severity": "high",
+    "confidence": "high"
+  }
+]

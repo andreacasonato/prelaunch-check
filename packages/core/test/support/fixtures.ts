@@ -148,7 +148,8 @@ export function loadFixtureDir(dir: string): Record<string, string> {
   const files: Record<string, string> = {};
   for (const full of walk(dir)) {
     const rel = relative(dir, full).split(sep).join("/");
-    if (rel === "expected.json" || rel === ".plc-git-tracked" || rel === "online.json") continue;
+    if (rel === "expected.json" || rel === ".plc-git-tracked" || rel === "online.json" || rel === "site.json")
+      continue;
     files[mapFixturePath(rel)] = materialize(readFileSync(full, "utf8"));
   }
   return files;
@@ -178,4 +179,14 @@ export function writeFixtureDir(src: string, dest: string): void {
 /** Every fake value (publishable keys are redacted too), for "never appears in output" assertions. */
 export function allFakeValues(): string[] {
   return Object.values(FAKE);
+}
+
+/** A fixture case's recorded SiteSnapshot (site.json), with placeholders materialized. */
+export function fixtureSite<T>(dir: string): T | undefined {
+  try {
+    return JSON.parse(materialize(readFileSync(join(dir, "site.json"), "utf8"))) as T;
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+    throw e;
+  }
 }

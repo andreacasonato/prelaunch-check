@@ -1,0 +1,8 @@
+[
+  {
+    "path": "https://shop.example.com/assets/app.js.map",
+    "line": null,
+    "severity": "medium",
+    "confidence": "high"
+  }
+]

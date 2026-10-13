@@ -1,0 +1,26 @@
+[
+  {
+    "path": "https://shop.example.com/.DS_Store",
+    "line": null,
+    "severity": "low",
+    "confidence": "high"
+  },
+  {
+    "path": "https://shop.example.com/.env",
+    "line": null,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "https://shop.example.com/.git/HEAD",
+    "line": null,
+    "severity": "critical",
+    "confidence": "high"
+  },
+  {
+    "path": "https://shop.example.com/backup.zip",
+    "line": null,
+    "severity": "high",
+    "confidence": "high"
+  }
+]

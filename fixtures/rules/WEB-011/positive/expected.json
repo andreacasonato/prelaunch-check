@@ -1,0 +1,14 @@
+[
+  {
+    "path": "https://shop.example.com/openapi.json",
+    "line": null,
+    "severity": "medium",
+    "confidence": "medium"
+  },
+  {
+    "path": "https://shop.example.com/swagger",
+    "line": null,
+    "severity": "medium",
+    "confidence": "medium"
+  }
+]

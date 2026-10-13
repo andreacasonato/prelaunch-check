@@ -1,0 +1,14 @@
+[
+  {
+    "path": "https://shop.example.com/",
+    "line": null,
+    "severity": "low",
+    "confidence": "high"
+  },
+  {
+    "path": "https://shop.example.com/",
+    "line": null,
+    "severity": "low",
+    "confidence": "high"
+  }
+]
