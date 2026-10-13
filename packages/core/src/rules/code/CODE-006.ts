@@ -2,7 +2,23 @@ import type { RawFinding, Rule } from "../../types.js";
 import { finding, loadSources, matchBracket } from "./common.js";
 
 const STRIPE_IMPORT =
-  /\bimport\s+(?:[\w$*{}\s,]+\s+from\s+)?["']stripe["']|\brequire\s*\(\s*["']stripe["']\s*\)/g;
+  /\bimport\s+(?:([\w$*{}\s,]+)\s+from\s+)?["']stripe["']|\brequire\s*\(\s*["']stripe["']\s*\)/g;
+
+/** `import type X from "stripe"` and `import { type X } from "stripe"` are erased at build time. */
+function typeOnly(clause: string | undefined): boolean {
+  if (!clause) return false;
+  const c = clause.trim();
+  if (/^type\s/.test(c)) return true;
+  const braces = /^\{([^}]*)\}$/.exec(c);
+  return (
+    !!braces &&
+    braces[1]!
+      .split(",")
+      .map((x) => x.trim())
+      .filter(Boolean)
+      .every((x) => /^type\s/.test(x))
+  );
+}
 const CREATE_CLIENT = /\bcreateClient\s*\(/g;
 const SECRET_ENV =
   /(?:process\.env|import\.meta\.env)\s*(?:\.\s*|\[\s*["'`])[\w$]*(?:SERVICE_ROLE|SECRET)[\w$]*/;
@@ -26,7 +42,7 @@ export const CODE_006: Rule = {
     fixPromptTemplate:
       "`{{path}}` line {{line}} is client-side code but uses {{detail.what}}, which requires a secret key. Move this logic to a server-side route or function that reads the key from a server-only environment variable, and call that endpoint from the client instead. Use @stripe/stripe-js or the Supabase publishable key on the client.",
     falsePositiveNotes:
-      "Client detection is path-based for Vite (everything under src/), so server code kept in a Vite src/ folder is reported too.",
+      "Client detection is path-based for Vite (everything under src/), so server code kept in a Vite src/ folder is reported too. Type-only imports (import type … from 'stripe') are ignored because they never reach the browser.",
     sources: [
       { title: "Stripe API keys", url: "https://docs.stripe.com/keys" },
       { title: "Supabase API keys", url: "https://supabase.com/docs/guides/api/api-keys" },
@@ -42,6 +58,7 @@ export const CODE_006: Rule = {
       const imp = new RegExp(STRIPE_IMPORT.source, "g");
       for (let m = imp.exec(f.code); m !== null; m = imp.exec(f.code)) {
         if (f.bare.slice(m.index, m.index + 6) !== f.code.slice(m.index, m.index + 6)) continue; // inside a string
+        if (typeOnly(m[1])) continue;
         const x = finding("CODE-006", f, m.index, m.index + m[0].length);
         x.title = "Server-side Stripe SDK imported in client code";
         x.evidence.detail = { what: "the server-side `stripe` SDK" };

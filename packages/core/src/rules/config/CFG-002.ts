@@ -19,6 +19,8 @@ export const CFG_002: Rule = {
     ],
     fixPromptTemplate:
       "My .gitignore {{detail.problem}}. Add `.env*`, `!.env.example` and `node_modules/` to the root .gitignore (create it if missing), then check with `git status` that no .env file is tracked. If one is, run `git rm --cached` on it.",
+    falsePositiveNotes:
+      "Next.js's default .gitignore ignores only `.env*.local`, on the basis that `.env` holds non-secret defaults. If that's how you use `.env`, record this as an accepted risk.",
     sources: [
       { title: "gitignore documentation", url: "https://git-scm.com/docs/gitignore" },
       { title: "Secrets & API Keys", book: "Creating a Secure App — Secrets & API Keys" },

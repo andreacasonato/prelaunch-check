@@ -241,8 +241,9 @@ export function isEnvFile(path: string): boolean {
   return /(?:^|\/)\.env(?:\.[^/]*)?$/.test(path);
 }
 
+/** Templates such as .env.example, .env.local.example or .env.production.sample. */
 export function isEnvExample(path: string): boolean {
-  return /(?:^|\/)\.env\.(?:example|sample|template|dist|defaults)$/i.test(path);
+  return /(?:^|\/)\.env(?:\.[^/]*)?\.(?:example|sample|template|dist|defaults)$/i.test(path);
 }
 
 /** Lockfiles are skipped by secret scanning: integrity hashes are noise and they're large. */
