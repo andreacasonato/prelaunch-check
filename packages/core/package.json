@@ -1,0 +1,14 @@
+{
+  "name": "@prelaunch-check/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Portable rules engine for Prelaunch Check. Pure TypeScript: no Node or DOM APIs.",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  }
+}

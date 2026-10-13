@@ -1,0 +1,9 @@
+node_modules
+dist
+docs
+fixtures
+spikes
+coverage
+package-lock.json
+prelaunch-check-report
+*.md

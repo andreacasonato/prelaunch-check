@@ -1,0 +1,19 @@
+node_modules/
+dist/
+coverage/
+*.tgz
+.DS_Store
+
+# Environment files: ignore all, keep the example
+.env*
+!.env.example
+
+# Scanner output
+prelaunch-check-report/
+
+# Playwright
+test-results/
+playwright-report/
+
+# Deliberately vulnerable fixture projects need their .env files committed
+!fixtures/**/.env*

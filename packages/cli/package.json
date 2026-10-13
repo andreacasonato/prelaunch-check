@@ -1,0 +1,43 @@
+{
+  "name": "prelaunch-check",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Find the security holes in your app before you launch. Local-first, no AI, no server, no telemetry.",
+  "license": "MIT",
+  "author": "Andrea Casonato",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreacasonato/prelaunch-check.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/andreacasonato/prelaunch-check#readme",
+  "bugs": "https://github.com/andreacasonato/prelaunch-check/issues",
+  "keywords": [
+    "security",
+    "scanner",
+    "supabase",
+    "firebase",
+    "secrets",
+    "prelaunch",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "bin": {
+    "prelaunch-check": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@prelaunch-check/core": "0.0.0"
+  }
+}
