@@ -86,7 +86,17 @@ export default tseslint.config(
         { name: "require", message: "packages/core must not use Node globals." },
         { name: "Buffer", message: "packages/core must not use Node globals." },
         { name: "__dirname", message: "packages/core must not use Node globals." },
+        // Core never talks to the network: online lookups are injected through OnlineServices.
+        { name: "fetch", message: "packages/core must not make network requests. Use OnlineServices." },
+        { name: "XMLHttpRequest", message: "packages/core must not make network requests." },
+        { name: "WebSocket", message: "packages/core must not make network requests." },
+        { name: "EventSource", message: "packages/core must not make network requests." },
+        { name: "importScripts", message: "packages/core must not load code at runtime." },
       ],
+      // Scanned code is data, never executed.
+      "no-eval": "error",
+      "no-implied-eval": "error",
+      "no-new-func": "error",
     },
   },
 );
