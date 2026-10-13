@@ -1,7 +1,7 @@
 # CLAUDE.md: Prelaunch Check
 
 Open-source, local-first security scanner for apps before launch. No AI, no server, no telemetry.
-Specs live in `docs/`. Read the relevant doc before changing anything:
+Specs live in `docs/` (private planning docs, git-ignored and kept only locally; never commit them). Read the relevant doc before changing anything:
 - `docs/02-TRD.md` covers architecture, the rule catalog (§6) and scoring (§8);
 - `docs/05-SCHEMA.md` covers types and the report format.
 
@@ -21,7 +21,7 @@ Specs live in `docs/`. Read the relevant doc before changing anything:
 - The URL scan sends only GET/HEAD requests from the fixed plan, ≤ 40 requests, after the ownership confirmation. No attack payloads, ever.
 - UI copy never calls a user's app "safe" or "secure". Use the fixed verdict words: Blocked / Needs attention / No blocking issues found.
 - Use the design tokens in `docs/04-DESIGN-BRIEF.md` §4.1. Don't choose colours, fonts or layouts yourself.
-- Runtime dependency budget: ≤ 5 for core + cli. Record any new dependency in `docs/DEPENDENCIES.md` (why, license, maintenance) and ask before adding one.
+- Runtime dependency budget: ≤ 5 for core + cli. Record any new dependency in `DEPENDENCIES.md` (why, license, maintenance) and ask before adding one.
 - GitHub Actions: pin to full commit SHA; set minimal `permissions`.
 
 ## Working style

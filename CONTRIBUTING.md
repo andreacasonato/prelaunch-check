@@ -29,7 +29,7 @@ A rule is **one file plus fixtures plus sources**.
 
 1. **Pick an ID** following `^[A-Z]{2,4}(-INV|-INFO)?-\d{3}$` in the right category (`SEC`, `DB`, `DEP`, `CODE`, `CFG`, `WEB`). IDs are permanent once released.
 2. **Write the rule** at `packages/core/src/rules/<category>/<RULE-ID>.ts`. It exports a `Rule` with:
-   - `meta`: every field in `RuleMeta` (docs/05-SCHEMA.md §2.2). `sources` must cite the vendor doc, standard or book chapter that justifies the rule. `why` is 2–4 plain sentences. `fix` is ordered steps. `falsePositiveNotes` lists the known false positives.
+   - `meta`: every field in `RuleMeta` (`packages/core/src/types.ts`). `sources` must cite the vendor doc, standard or book chapter that justifies the rule. `why` is 2–4 plain sentences. `fix` is ordered steps. `falsePositiveNotes` lists the known false positives.
    - `check(ctx)`: returns `RawFinding[]`. It must be deterministic. For secrets, put the raw value in `secretValue` so the engine can redact it and fingerprint it.
 3. **Register it** in `packages/core/src/rules/index.ts`.
 4. **Add fixtures**:

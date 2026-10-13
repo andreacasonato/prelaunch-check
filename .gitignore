@@ -17,3 +17,6 @@ playwright-report/
 
 # Deliberately vulnerable fixture projects need their .env files committed
 !fixtures/**/.env*
+
+# Private planning docs: kept locally, never published
+/docs/
