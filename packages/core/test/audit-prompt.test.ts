@@ -15,7 +15,8 @@ describe("AUDIT-PROMPT.md", () => {
     for (const r of DEFAULT_RULES)
       if (!r.meta.id.startsWith("CFG-INFO")) expect(text, r.meta.id).toContain(`**${r.meta.id} ·`);
     expect(text).toContain("**SEC-006 ·");
-    expect(text).toContain("**MAN-018**");
+    expect(text).toContain("**MAN-031**");
+    expect(text).toContain("### Legal & trust");
     expect(text).not.toMatch(/sk_live_[A-Za-z0-9]{8}/);
   });
 });

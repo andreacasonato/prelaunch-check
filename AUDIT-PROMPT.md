@@ -286,24 +286,53 @@ List every API endpoint (Next.js `app/**/route.*` exports and `pages/api/**`, Ex
 
 These depend on how the app is meant to work, so a scan can't settle them. For each one, look for evidence in the code and answer **looks handled**, **looks missing**, or **can't tell from the code**, with one line of evidence. Then tell me how to test it myself.
 
+### Try to break in
+
 - **MAN-001** Can I give myself premium or credits by editing my own data? How to test: Sign in as a normal user, then use the browser console or your database client with that user's session to update your own profile's plan, role or credits.
 - **MAN-002** Can I read someone else's data by changing an ID in a request? How to test: Open the Network tab, find a request that loads your data by ID, and replay it with another user's ID (create a second test account for this).
 - **MAN-003** Can I press the expensive button past its limit? How to test: Click the action that costs you money (AI call, email, export) many times quickly, and from two tabs at once. Check whether the limit holds on the server.
 - **MAN-004** Logged-out test: no data or paid features reachable. How to test: Open a private window without signing in. Visit every page and API URL you know about, including deep links to user content.
 - **MAN-005** Every endpoint classified as anonymous, user or admin; admin routes verified. How to test: Use the endpoint inventory in this report. For each route, write down who should reach it, then call admin routes as a normal user and as a logged-out visitor.
+
+### Abuse & cost
+
 - **MAN-006** Server-side rate limits on login, sign-up and expensive endpoints. How to test: Send 50 rapid requests to login, sign-up and any AI or email endpoint. Confirm you get blocked, and that per-user limits are stored somewhere users can't edit.
 - **MAN-007** Budget caps and spend alerts on every paid service. How to test: Open the billing settings of each provider (cloud, AI API, email, database) and confirm a hard cap or alert is set.
-- **MAN-008** Paywall and roles enforced on the server, not in the browser. How to test: With a free account, call the paid feature's API directly (copy it from the Network tab). It should refuse.
 - **MAN-009** Payments: button disabled after first click, idempotency keys, fulfilment only after webhook. How to test: Double-click the pay button, then check that only one charge was created. Confirm orders are fulfilled from the payment provider's webhook, not from the success page.
+
+### Auth & data
+
+- **MAN-008** Paywall and roles enforced on the server, not in the browser. How to test: With a free account, call the paid feature's API directly (copy it from the Network tab). It should refuse.
 - **MAN-010** Email verification on; generic 'invalid credentials' login errors. How to test: Sign up with an address you don't control and see if you get in. Try logging in with a wrong password for a real and a fake email: the messages should be identical.
 - **MAN-011** Proven auth provider or library; no home-made auth. How to test: Check where sign-in, sessions and password hashing come from. They should come from a maintained provider or library.
 - **MAN-012** Server-side input validation, length limits, upload type and size limits. How to test: Send an oversized value, a wrong type, and a large or mislabeled file to each form's API. The server should reject them.
 - **MAN-013** Storage buckets private; EXIF stripped from uploaded photos. How to test: Open an uploaded file's URL in a private window. Download an uploaded photo and check it has no GPS location in its metadata.
+- **MAN-017** Automated test proving user B can't read or modify user A's data. How to test: Add a test that signs in as two users and asserts that B's reads and writes of A's records fail. Run it in CI.
+
+### Operations
+
 - **MAN-014** Separate dev and prod databases; backups enabled; agents have no prod access. How to test: Confirm your local .env points at a dev project, that backups are on for production, and that no AI agent or script holds production credentials.
 - **MAN-015** Any key ever exposed (chat, screenshot, commit) has been rotated. How to test: List every key you've pasted into a chat, shown in a screenshot or committed. Rotate each one in the provider's dashboard.
 - **MAN-016** Threat model written. How to test: Write one page answering: what are we building, what can go wrong, what are we doing about it, and did we do a good job?
-- **MAN-017** Automated test proving user B can't read or modify user A's data. How to test: Add a test that signs in as two users and asserts that B's reads and writes of A's records fail. Run it in CI.
 - **MAN-018** Error tracking and logging with retention; no sensitive data in logs or errors. How to test: Trigger an error and check that it reaches your error tracker, that logs are kept for a set time, and that neither contains passwords, tokens or personal data.
+
+### Legal & trust
+
+Common legal and trust problems for apps that take sign-ups or payments. This isn't legal advice, and no scanner can check these for you. What applies depends on where you are and where your users are. If you handle health, money or children's data, talk to a lawyer. Last reviewed October 2026.
+
+- **MAN-019** A privacy policy is published and matches what the app actually collects. How to test: List every field you store and every third-party SDK or script (analytics, payments, error tracking, AI APIs). Check that each one appears in your privacy policy with what it's for, and that the policy is linked from the footer and the sign-up form.
+- **MAN-020** You collect only data the app actually uses. How to test: Go through your sign-up and profile forms and your database tables. For each field, name the feature that needs it. Remove anything you can't name a feature for, such as a birthday or phone number kept "for later".
+- **MAN-021** Non-essential cookies and trackers load only after consent, and rejecting is as easy as accepting. How to test: Open the site in a private window and don't touch the banner. In DevTools, check Application → Cookies and the Network tab: no analytics or ad cookies or requests yet. Then check that rejecting takes one click, like accepting.
+- **MAN-022** Consent checkboxes start unticked and are separate from accepting the terms. How to test: Look at every form that asks for consent (newsletter, marketing, data sharing). Each one has its own checkbox, unticked by default, and the form still submits without it.
+- **MAN-023** Terms of service and a refund policy are published and match how you charge. How to test: Read your terms and refund policy next to your pricing page and checkout. Plan names, prices, renewal periods and the refund window should all match. If you sell to EU consumers, check how you handle their 14-day right to withdraw.
+- **MAN-024** The full price is shown before payment, with no pre-ticked extras, and cancelling is no harder than signing up. How to test: Go through checkout as a new user. The total you see before paying is what you're charged. Then cancel a subscription and count the steps compared with signing up.
+- **MAN-025** Every review and testimonial comes from a real customer, and insider reviews are labelled. How to test: For each review, testimonial and customer logo on the site, check you could show where it came from. Remove placeholder or AI-written ones. Label reviews from staff, friends or anyone you paid.
+- **MAN-026** Every claim on the site can be backed up. How to test: List the factual claims on your landing page ("10,000 users", "#1", "bank-grade security", "saves 5 hours a week", "GDPR compliant"). For each one, write down the evidence you have today. Remove or reword any you can't back up.
+- **MAN-027** Basic accessibility: alt text, readable contrast, keyboard navigation. How to test: Use the whole app with only the keyboard (Tab, Enter, Esc) and check you can always see where focus is. Run Lighthouse or axe DevTools on your main pages and fix the contrast and missing-alt-text warnings.
+- **MAN-028** Your business name and a way to contact you are easy to find. How to test: Check that the footer or a contact page shows who runs the app (legal name), a postal or registered address and a working email address.
+- **MAN-029** You know whether children use the app, and handle their data accordingly. How to test: Decide whether the app is aimed at, or likely to attract, children under 13 (US) or under 16 (EU; the age varies by country). If so, check how you get parental consent. If not, say so in your terms and don't market to children.
+- **MAN-030** Marketing emails have a working unsubscribe link and your postal address. How to test: Send yourself each marketing email. Unsubscribe and confirm it works without logging in and that no more emails arrive. Check the footer shows a physical postal address.
+- **MAN-031** Users can delete their account and data themselves. How to test: Create a test account, add some data, then delete the account from inside the app. Confirm the data is gone from your database and from services you sent it to (email list, analytics), not just hidden.
 
 ## Step 10: Write the report
 

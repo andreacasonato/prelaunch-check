@@ -130,7 +130,7 @@ It checks HTTPS and the redirect from http://, security headers (HSTS, Content-S
 | **Code patterns** | SQL built from strings, `eval`, unsafe HTML, wide-open CORS with cookies, secrets printed to logs, secret-key SDKs in browser code, and a list of your API endpoints showing which ones check login. |
 | **Project config** | Source maps in production builds; missing `.gitignore` entries; risky GitHub Actions workflows. |
 | **Live site** (with `--url`) | HTTPS and redirects, security headers, cookie flags, exposed files and API docs, public source maps, secrets in served JavaScript, CORS, `security.txt`, certificate expiry, mixed content. |
-| **Manual checklist** | 18 things no scanner can verify, such as "can I give myself premium by editing my own data?". Printed in every report. |
+| **Manual checklist** | 31 things no scanner can verify, such as "can I give myself premium by editing my own data?", plus legal and trust basics (privacy policy, cookie consent, account deletion) with links to the regulators' own guidance. Printed in every report. Not legal advice. |
 
 Run `npx prelaunch-check rules` to see every rule.
 

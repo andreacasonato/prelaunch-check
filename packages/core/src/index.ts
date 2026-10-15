@@ -11,7 +11,7 @@ export { compareFindings, SEVERITY_ORDER, CATEGORY_ORDER, CONFIDENCE_ORDER } fro
 export { MemoryFileSource } from "./sources/memory.js";
 export { ALWAYS_IGNORED_DIRS, ignoredDirOf, isIgnoredDir, normalisePath } from "./files/paths.js";
 export { matchGlob } from "./files/glob.js";
-export { CHECKLIST } from "./checklist/items.js";
+export { CHECKLIST, CHECKLIST_GROUPS } from "./checklist/items.js";
 export { DEFAULT_RULES } from "./rules/index.js";
 export { toMarkdown, locationText } from "./formats/markdown.js";
 export { PROBES, FALLBACK_PROBES, CORS_TEST_ORIGIN, SITE_LIMITS, type Probe } from "./rules/web/probes.js";

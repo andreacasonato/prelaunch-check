@@ -9,6 +9,7 @@ import { SENSITIVE_COLUMNS } from "../rules/data/sensitive-columns.js";
 import { PUBLISHABLE_PATTERNS, SECRET_PATTERNS } from "../rules/secrets/patterns.js";
 import { PROBES, CORS_TEST_ORIGIN } from "../rules/web/probes.js";
 import { REPO_URL } from "../version.js";
+import { groupChecklist } from "../checklist/group.js";
 
 const SECTION: Record<Category, { title: string; intro: string }> = {
   secrets: {
@@ -163,9 +164,17 @@ export function auditPrompt(): string {
     "These depend on how the app is meant to work, so a scan can't settle them. For each one, look for evidence in the code and answer **looks handled**, **looks missing**, or **can't tell from the code**, with one line of evidence. Then tell me how to test it myself.",
   );
   out.push("");
-  for (const c of CHECKLIST)
-    out.push(`- **${c.id}** ${c.title}${/[?.!]$/.test(c.title) ? "" : "."} How to test: ${c.howToTest}`);
-  out.push("");
+  for (const section of groupChecklist(CHECKLIST)) {
+    out.push(`### ${section.title}`);
+    out.push("");
+    if (section.intro) {
+      out.push(section.intro);
+      out.push("");
+    }
+    for (const c of section.items)
+      out.push(`- **${c.id}** ${c.title}${/[?.!]$/.test(c.title) ? "" : "."} How to test: ${c.howToTest}`);
+    out.push("");
+  }
   out.push(`## Step ${step++}: Write the report`);
   out.push("");
   out.push("Start with exactly one verdict line:");

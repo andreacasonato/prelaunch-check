@@ -52,6 +52,19 @@ describe("toHtml", () => {
     expect(html.match(/<\/style>/g)).toHaveLength(1);
   });
 
+  it("groups the checklist under escaped headings, with the legal disclaimer", async () => {
+    const report = await scan({ "src/a.ts": "x" }, { rules: [testRule000] });
+    const html = await toHtml({
+      ...report,
+      checklist: [...report.checklist, { ...report.checklist[0]!, id: "MAN-999", group: EVIL[0]! }],
+    });
+    expect(html).toContain("<h3>Try to break in</h3>");
+    expect(html).toContain("<h3>Legal &amp; trust</h3>");
+    expect(html).toContain("This isn&#39;t legal advice");
+    expect(html).toContain("<h3>&lt;script&gt;alert(1)&lt;/script&gt;</h3>");
+    expect(html).not.toMatch(/<script/i);
+  });
+
   it("is self-contained with a strict CSP that pins the inline style by hash", async () => {
     const report = await scan({ "src/a.ts": "// PLC_TEST_MARKER\n" }, { rules: [testRule000] });
     const html = await toHtml(report);

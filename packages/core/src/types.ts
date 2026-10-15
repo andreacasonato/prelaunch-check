@@ -193,6 +193,11 @@ export type OnlineStatus = "used" | "off" | "failed";
 
 export type SeverityCounts = Record<Severity, number> & { worthChecking: number; suppressed: number };
 
+export interface ChecklistLink {
+  label: string;
+  url: string;
+}
+
 export interface ChecklistItem {
   id: string;
   group: string;
@@ -200,6 +205,14 @@ export interface ChecklistItem {
   howToTest: string;
   why: string;
   source: string;
+  /** Primary sources to read, when the item cites more than the book. */
+  links?: ChecklistLink[];
+}
+
+export interface ChecklistGroup {
+  title: string;
+  /** Shown above the group's items. */
+  intro?: string;
 }
 
 export interface Endpoint {

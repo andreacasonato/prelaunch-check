@@ -135,7 +135,8 @@ test("checklist is accessible and remembers ticks @mobile", async ({ page }) => 
   await page.getByLabel("Can I give myself premium or credits by editing my own data?").check();
   await page.reload();
   await expect(page.getByLabel("Can I give myself premium or credits by editing my own data?")).toBeChecked();
-  await expect(page.getByText("1 / 18 done")).toBeVisible();
+  await expect(page.getByText("1 / 31 done")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Legal & trust" })).toBeVisible();
 });
 
 test("opening a report file works, and junk files are rejected", async ({ page }) => {

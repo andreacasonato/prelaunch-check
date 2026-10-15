@@ -1,5 +1,5 @@
-// Manual checklist MAN-001…018 (TRD §6.7). Data only: never affects the score.
-import type { ChecklistItem } from "../types.js";
+// Manual checklist MAN-001…031 (TRD §6.7). Data only: never affects the score.
+import type { ChecklistGroup, ChecklistItem, ChecklistLink } from "../types.js";
 
 const APPENDIX_A = "Creating a Secure App — Appendix A: Master Security & Launch Checklist";
 const VERIFY = "Creating a Secure App — Verify: Hack Yourself Before Someone Else Does";
@@ -8,6 +8,29 @@ const BREAK_IN = "Try to break in";
 const ABUSE = "Abuse & cost";
 const AUTH = "Auth & data";
 const OPS = "Operations";
+const LEGAL = "Legal & trust";
+
+export const CHECKLIST_GROUPS: readonly ChecklistGroup[] = [
+  { title: BREAK_IN },
+  { title: ABUSE },
+  { title: AUTH },
+  { title: OPS },
+  {
+    title: LEGAL,
+    intro:
+      "Common legal and trust problems for apps that take sign-ups or payments. This isn't legal advice, and no scanner can check these for you. What applies depends on where you are and where your users are. If you handle health, money or children's data, talk to a lawyer. Last reviewed October 2026.",
+  },
+];
+
+// Legal items cite regulators, not the book. Each link was checked when the item was written.
+const GDPR = (article: string): ChecklistLink => ({
+  label: `EU GDPR ${article}`,
+  url: "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+});
+
+function legal(item: Omit<ChecklistItem, "group" | "source"> & { links: ChecklistLink[] }): ChecklistItem {
+  return { ...item, group: LEGAL, source: item.links.map((l) => l.label).join("; ") };
+}
 
 export const CHECKLIST: readonly ChecklistItem[] = [
   {
@@ -172,4 +195,181 @@ export const CHECKLIST: readonly ChecklistItem[] = [
     why: "You can't respond to attacks you can't see, and logs full of secrets become a second leak.",
     source: APPENDIX_A,
   },
+  legal({
+    id: "MAN-019",
+    title: "A privacy policy is published and matches what the app actually collects",
+    howToTest:
+      "List every field you store and every third-party SDK or script (analytics, payments, error tracking, AI APIs). Check that each one appears in your privacy policy with what it's for, and that the policy is linked from the footer and the sign-up form.",
+    why: "Privacy laws require you to tell people what you collect, why, and who receives it. A copied template that doesn't mention your actual tools is a common complaint.",
+    links: [
+      GDPR("Art. 13"),
+      {
+        label: "ICO: right to be informed",
+        url: "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/individual-rights/right-to-be-informed/",
+      },
+      { label: "California CCPA", url: "https://oag.ca.gov/privacy/ccpa" },
+    ],
+  }),
+  legal({
+    id: "MAN-020",
+    title: "You collect only data the app actually uses",
+    howToTest:
+      'Go through your sign-up and profile forms and your database tables. For each field, name the feature that needs it. Remove anything you can\'t name a feature for, such as a birthday or phone number kept "for later".',
+    why: "Data you don't collect can't leak and doesn't need explaining. GDPR calls this data minimisation.",
+    links: [GDPR("Art. 5(1)(c)")],
+  }),
+  legal({
+    id: "MAN-021",
+    title:
+      "Non-essential cookies and trackers load only after consent, and rejecting is as easy as accepting",
+    howToTest:
+      "Open the site in a private window and don't touch the banner. In DevTools, check Application → Cookies and the Network tab: no analytics or ad cookies or requests yet. Then check that rejecting takes one click, like accepting.",
+    why: "In the EU, analytics and advertising cookies need consent first. Since 2026 the UK lets some low-risk analytics run without it, but advertising and cross-site tracking still need consent.",
+    links: [
+      {
+        label: "EDPB Guidelines 05/2020 on consent",
+        url: "https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-052020-consent-under-regulation-2016679_en",
+      },
+      {
+        label: "ICO: storage and access technologies",
+        url: "https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/guidance-on-the-use-of-storage-and-access-technologies/about-this-guidance/",
+      },
+    ],
+  }),
+  legal({
+    id: "MAN-022",
+    title: "Consent checkboxes start unticked and are separate from accepting the terms",
+    howToTest:
+      "Look at every form that asks for consent (newsletter, marketing, data sharing). Each one has its own checkbox, unticked by default, and the form still submits without it.",
+    why: "The EU Court of Justice ruled that a pre-ticked box isn't valid consent.",
+    links: [{ label: "CJEU C-673/17 Planet49", url: "https://curia.europa.eu/juris/liste.jsf?num=C-673/17" }],
+  }),
+  legal({
+    id: "MAN-023",
+    title: "Terms of service and a refund policy are published and match how you charge",
+    howToTest:
+      "Read your terms and refund policy next to your pricing page and checkout. Plan names, prices, renewal periods and the refund window should all match. If you sell to EU consumers, check how you handle their 14-day right to withdraw.",
+    why: "Customers and payment providers use these pages to settle disputes. If they contradict your checkout, you are the one who has to explain it.",
+    links: [
+      {
+        label: "Your Europe: returns and the 14-day withdrawal right",
+        url: "https://europa.eu/youreurope/citizens/consumers/shopping/returns/index_en.htm",
+      },
+    ],
+  }),
+  legal({
+    id: "MAN-024",
+    title:
+      "The full price is shown before payment, with no pre-ticked extras, and cancelling is no harder than signing up",
+    howToTest:
+      "Go through checkout as a new user. The total you see before paying is what you're charged. Then cancel a subscription and count the steps compared with signing up.",
+    why: "Hidden fees, pre-selected extras and hard-to-find cancellation are standard examples of dark patterns that regulators act on.",
+    links: [
+      {
+        label: "FTC: Bringing Dark Patterns to Light (2022)",
+        url: "https://www.ftc.gov/system/files/ftc_gov/pdf/P214800+Dark+Patterns+Report+9.14.2022+-+FINAL.pdf",
+      },
+    ],
+  }),
+  legal({
+    id: "MAN-025",
+    title: "Every review and testimonial comes from a real customer, and insider reviews are labelled",
+    howToTest:
+      "For each review, testimonial and customer logo on the site, check you could show where it came from. Remove placeholder or AI-written ones. Label reviews from staff, friends or anyone you paid.",
+    why: "In the US, fake reviews and undisclosed insider reviews are banned by an FTC rule with civil penalties.",
+    links: [
+      {
+        label: "FTC: Consumer Reviews and Testimonials Rule Q&A",
+        url: "https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers",
+      },
+    ],
+  }),
+  legal({
+    id: "MAN-026",
+    title: "Every claim on the site can be backed up",
+    howToTest:
+      'List the factual claims on your landing page ("10,000 users", "#1", "bank-grade security", "saves 5 hours a week", "GDPR compliant"). For each one, write down the evidence you have today. Remove or reword any you can\'t back up.',
+    why: "US law expects you to have the evidence before you make a claim, not after someone challenges it.",
+    links: [
+      {
+        label: "FTC: Advertising FAQs for small business",
+        url: "https://www.ftc.gov/business-guidance/resources/advertising-faqs-guide-small-business",
+      },
+    ],
+  }),
+  legal({
+    id: "MAN-027",
+    title: "Basic accessibility: alt text, readable contrast, keyboard navigation",
+    howToTest:
+      "Use the whole app with only the keyboard (Tab, Enter, Esc) and check you can always see where focus is. Run Lighthouse or axe DevTools on your main pages and fix the contrast and missing-alt-text warnings.",
+    why: "Website accessibility lawsuits are common in the US. In the EU, the European Accessibility Act has applied since 28 June 2025; service businesses with fewer than 10 staff and at most €2M turnover are exempt.",
+    links: [
+      { label: "W3C: Easy checks", url: "https://www.w3.org/WAI/test-evaluate/preliminary/" },
+      { label: "WCAG 2.2", url: "https://www.w3.org/TR/WCAG22/" },
+      { label: "Directive (EU) 2019/882", url: "https://eur-lex.europa.eu/eli/dir/2019/882/oj" },
+      { label: "ADA.gov web guidance", url: "https://www.ada.gov/resources/web-guidance/" },
+    ],
+  }),
+  legal({
+    id: "MAN-028",
+    title: "Your business name and a way to contact you are easy to find",
+    howToTest:
+      "Check that the footer or a contact page shows who runs the app (legal name), a postal or registered address and a working email address.",
+    why: "EU law requires online services to show who runs them and how to reach them. Some countries require a dedicated page, such as Germany's Impressum.",
+    links: [
+      {
+        label: "E-Commerce Directive 2000/31/EC Art. 5",
+        url: "https://eur-lex.europa.eu/eli/dir/2000/31/oj",
+      },
+    ],
+  }),
+  legal({
+    id: "MAN-029",
+    title: "You know whether children use the app, and handle their data accordingly",
+    howToTest:
+      "Decide whether the app is aimed at, or likely to attract, children under 13 (US) or under 16 (EU; the age varies by country). If so, check how you get parental consent. If not, say so in your terms and don't market to children.",
+    why: "Children's data has the strictest rules: COPPA in the US, GDPR Art. 8 in the EU and the UK Children's code.",
+    links: [
+      {
+        label: "FTC: Complying with COPPA FAQ",
+        url: "https://www.ftc.gov/business-guidance/resources/complying-coppa-frequently-asked-questions",
+      },
+      GDPR("Art. 8"),
+      {
+        label: "ICO: Children's code",
+        url: "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/childrens-information/childrens-code-guidance-and-resources/",
+      },
+    ],
+  }),
+  legal({
+    id: "MAN-030",
+    title: "Marketing emails have a working unsubscribe link and your postal address",
+    howToTest:
+      "Send yourself each marketing email. Unsubscribe and confirm it works without logging in and that no more emails arrive. Check the footer shows a physical postal address.",
+    why: "US law requires a clear opt-out, honoured within 10 business days, and a valid postal address in every commercial email.",
+    links: [
+      {
+        label: "FTC: CAN-SPAM compliance guide",
+        url: "https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business",
+      },
+    ],
+  }),
+  legal({
+    id: "MAN-031",
+    title: "Users can delete their account and data themselves",
+    howToTest:
+      "Create a test account, add some data, then delete the account from inside the app. Confirm the data is gone from your database and from services you sent it to (email list, analytics), not just hidden.",
+    why: "GDPR and the CCPA give users a right to deletion. Apple and Google require in-app account deletion for apps that let users sign up, and Google also requires a web link for deletion requests.",
+    links: [
+      GDPR("Art. 17"),
+      {
+        label: "App Store Review Guideline 5.1.1(v)",
+        url: "https://developer.apple.com/app-store/review/guidelines/",
+      },
+      {
+        label: "Google Play: account deletion",
+        url: "https://support.google.com/googleplay/android-developer/answer/13327111",
+      },
+    ],
+  }),
 ];

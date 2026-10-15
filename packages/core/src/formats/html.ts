@@ -6,6 +6,7 @@ import { SEC_006_META } from "../rules/secrets/SEC-006.js";
 import { VERDICT_LABEL, verdictSentence } from "../copy.js";
 import { locationText } from "./markdown.js";
 import { REPO_URL } from "../version.js";
+import { groupChecklist } from "../checklist/group.js";
 
 const ALL_META = new Map<string, RuleMeta>([
   ...DEFAULT_RULES.map((r) => [r.meta.id, r.meta] as const),
@@ -198,7 +199,12 @@ ${
     : ""
 }
 <h2>Pre-launch checklist</h2>
-<ul class="plain">${report.checklist.map((i) => `<li><strong>${esc(i.id)}</strong> ${esc(i.title)}<br><span class="small">How to test: ${esc(i.howToTest)}</span></li>`).join("")}</ul>
+${groupChecklist(report.checklist)
+  .map(
+    (s) =>
+      `<h3>${esc(s.title)}</h3>${s.intro ? `<p class="small">${esc(s.intro)}</p>` : ""}<ul class="plain">${s.items.map((i) => `<li><strong>${esc(i.id)}</strong> ${esc(i.title)}<br><span class="small">How to test: ${esc(i.howToTest)}</span></li>`).join("")}</ul>`,
+  )
+  .join("")}
 <p class="small muted">Made with <a href="${esc(REPO_URL)}" rel="noopener noreferrer">Prelaunch Check</a>. It lists what was found and what couldn&#39;t be checked; no scanner can prove an app has no problems.</p>
 </main>
 </body>

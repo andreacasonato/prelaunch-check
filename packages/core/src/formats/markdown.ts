@@ -1,6 +1,7 @@
 // Plain Markdown report: paste into PRs, issues or an AI agent (TRD §9).
 import type { Finding, Report, Severity } from "../types.js";
 import { VERDICT_LABEL, verdictSentence, SEVERITY_LABEL } from "../copy.js";
+import { groupChecklist } from "../checklist/group.js";
 
 function longestBacktickRun(text: string): number {
   return Math.max(0, ...Array.from(text.matchAll(/`+/g), (m) => m[0].length));
@@ -119,8 +120,12 @@ export function toMarkdown(report: Report): string {
 
   out.push("", "## Pre-launch checklist", "");
   out.push("No scanner can verify these. Work through them before you launch.", "");
-  for (const item of report.checklist)
-    out.push(`- [ ] **${item.id}** ${esc(item.title)}: ${esc(item.howToTest)}`);
-  out.push("");
+  for (const section of groupChecklist(report.checklist)) {
+    out.push(`### ${esc(section.title)}`, "");
+    if (section.intro) out.push(esc(section.intro), "");
+    for (const item of section.items)
+      out.push(`- [ ] **${item.id}** ${esc(item.title)}: ${esc(item.howToTest)}`);
+    out.push("");
+  }
   return out.join("\n");
 }

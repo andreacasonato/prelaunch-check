@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   CATEGORY_ORDER,
+  CHECKLIST,
   compareFindings,
   toHtml,
   toMarkdown,
@@ -366,7 +367,7 @@ export function Report({ fingerprint }: { fingerprint?: string | undefined }) {
       <section className="section" aria-labelledby="check-h">
         <h2 id="check-h">Pre-launch checklist</h2>
         <p className="progress-line">
-          {checklistDone} / {report.checklist.length || 18} done
+          {checklistDone} / {report.checklist.length || CHECKLIST.length} done
         </p>
         <a href="#/checklist">Open the checklist</a>
       </section>

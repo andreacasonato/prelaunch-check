@@ -1,5 +1,5 @@
 // W-01 Home: what it is, who it's for, why it matters, and four clear doors.
-import { VERDICT_LABEL } from "@prelaunch-check/core";
+import { CHECKLIST, VERDICT_LABEL } from "@prelaunch-check/core";
 import { getMostRecentScan } from "../lib/storage";
 
 function ago(iso: string): string {
@@ -44,7 +44,7 @@ export function Home() {
         </a>
         <a className="door" href="#/checklist">
           <strong>Pre-launch checklist</strong>
-          <span>18 things no scanner can check for you, with how to test each one.</span>
+          <span>{CHECKLIST.length} things no scanner can check for you, with how to test each one.</span>
         </a>
         <a className="door" href="#/live">
           <strong>Scan a live site</strong>

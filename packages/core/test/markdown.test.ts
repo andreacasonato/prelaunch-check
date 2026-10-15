@@ -17,6 +17,8 @@ describe("toMarkdown", () => {
     expect(md).toContain("`src/a.ts:2`");
     expect(md).toContain("## Pre-launch checklist");
     expect(md).toContain("- [ ] **MAN-001**");
+    expect(md).toContain("### Legal & trust");
+    expect(md).toContain("This isn't legal advice");
     // Fence must be longer than any backtick run inside the snippet.
     expect(md).toContain("`````");
   });

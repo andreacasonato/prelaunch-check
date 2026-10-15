@@ -1,15 +1,15 @@
 // W-06 Pre-launch checklist: native checkboxes, how to test, expandable why. Works without a scan.
 import { useState } from "react";
-import { CHECKLIST } from "@prelaunch-check/core";
+import { CHECKLIST, CHECKLIST_GROUPS } from "@prelaunch-check/core";
 import { getChecklist, setChecklist, storageAvailable } from "../lib/storage";
 import { useApp } from "../lib/state";
 
-const GROUPS: Array<{ title: string; ids: string[] }> = [
-  { title: "Try to break in", ids: ["MAN-001", "MAN-002", "MAN-003", "MAN-004", "MAN-005"] },
-  { title: "Abuse & cost", ids: ["MAN-006", "MAN-007", "MAN-009"] },
-  { title: "Auth & data", ids: ["MAN-008", "MAN-010", "MAN-011", "MAN-012", "MAN-013", "MAN-017"] },
-  { title: "Operations", ids: ["MAN-014", "MAN-015", "MAN-016", "MAN-018"] },
-];
+const GROUPS = CHECKLIST_GROUPS.map((g) => ({
+  ...g,
+  // aria-labelledby takes a space-separated id list, so the heading id must not contain spaces.
+  slug: g.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+  items: CHECKLIST.filter((c) => c.group === g.title),
+}));
 
 export function Checklist() {
   const { project } = useApp();
@@ -52,10 +52,11 @@ export function Checklist() {
         </button>
       </div>
       {GROUPS.map((g) => (
-        <section key={g.title} className="checklist-group" aria-labelledby={`g-${g.title}`}>
-          <h2 id={`g-${g.title}`}>{g.title}</h2>
-          {g.ids.map((id) => {
-            const item = CHECKLIST.find((c) => c.id === id)!;
+        <section key={g.title} className="checklist-group" aria-labelledby={`g-${g.slug}`}>
+          <h2 id={`g-${g.slug}`}>{g.title}</h2>
+          {g.intro && <p>{g.intro}</p>}
+          {g.items.map((item) => {
+            const id = item.id;
             return (
               <div key={id} className="check-item">
                 <input
@@ -72,7 +73,19 @@ export function Checklist() {
                   <details>
                     <summary>Why</summary>
                     <p className="small">{item.why}</p>
-                    <p className="small muted">Source: {item.source}</p>
+                    {item.links ? (
+                      <ul className="small">
+                        {item.links.map((l) => (
+                          <li key={l.url + l.label}>
+                            <a href={l.url} target="_blank" rel="noopener noreferrer">
+                              {l.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="small muted">Source: {item.source}</p>
+                    )}
                   </details>
                 </div>
               </div>

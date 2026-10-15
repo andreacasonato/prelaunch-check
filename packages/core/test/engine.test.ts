@@ -25,7 +25,7 @@ describe("runScan", () => {
       weights: { critical: 25, high: 10, medium: 4, low: 1, info: 0 },
       perRuleCapMultiplier: 2,
     });
-    expect(report.checklist).toHaveLength(18);
+    expect(report.checklist).toHaveLength(31);
     expect(report.coverage.rulesRun).toEqual(["TEST-000"]);
   });
 
